@@ -11,9 +11,11 @@ public class Main {
 
         machine.processText("a12b");
         LOGGER.info("Machine in final state: {}", machine.isInFinalState());
+        LOGGER.info("Machine in error state: {}", machine.isInErrorState());
 
         machine.reset();
         machine.processText("a=12b");
         LOGGER.info("Machine in final state: {}", machine.isInFinalState());
+        LOGGER.info("Machine in error state: {}", machine.isInErrorState());
     }
 }

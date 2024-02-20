@@ -7,7 +7,7 @@ public class TestMachine extends StateMachine {
         var init = initialState("init");
         var digit = state("digit", true);
         var letter = state("letter", true);
-        var err = state("err");
+        var err = errorState();
 
         final String digitPattern = "[0-9]";
         final String letterPattern = "[a-zA-Z]";
@@ -23,8 +23,5 @@ public class TestMachine extends StateMachine {
         letter.addTransition(digit, digitPattern)
               .addTransition(letter, letterPattern)
               .setFallbackTransitionState(err);
-            
-        // optional, since the machine will stay in the same state if no transition is defined
-        err.setFallbackTransitionState(err);
     }
 }

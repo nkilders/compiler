@@ -11,10 +11,12 @@ public abstract class StateMachine {
     
     private State initialState;
     private State currentState;
+    private State errorState;
 
     public StateMachine() {
         this.initialState = null;
         this.currentState = null;
+        this.errorState = null;
 
         this.initStatesAndTransitions();
         this.reset();
@@ -76,12 +78,20 @@ public abstract class StateMachine {
         return currentState.isFinal();
     }
 
+    public boolean isInErrorState() {
+        return currentState == errorState;
+    }
+
     public State getInitialState() {
         return initialState;
     }
 
     public State getCurrentState() {
         return currentState;
+    }
+
+    public State getErrorState() {
+        return errorState;
     }
 
     /**
@@ -102,8 +112,10 @@ public abstract class StateMachine {
      * @return the newly created state
      */
     protected State initialState(String name, boolean isFinal) {
-        State state = new State(name, isFinal);
+        State state = state(name, isFinal);
+
         this.initialState = state;
+        
         return state;
     }
 
@@ -126,6 +138,20 @@ public abstract class StateMachine {
      */
     protected State state(String name, boolean isFinal) {
         return new State(name, isFinal);
+    }
+
+    /**
+     * Creates and returns a new non-final state which acts as the error state of the machine
+     * 
+     * @return the newly created state
+     */
+    protected State errorState() {
+        State state = state("error", false);
+        state.setFallbackTransitionState(state);
+        
+        this.errorState = state;
+
+        return state;
     }
 
     protected class State {
