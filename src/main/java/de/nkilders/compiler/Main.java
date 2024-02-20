@@ -7,6 +7,13 @@ public class Main {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
-        LOGGER.info("Hello world!");
+        var machine = new TestMachine();
+
+        machine.processText("a12b");
+        LOGGER.info("Machine in final state: {}", machine.isInFinalState());
+
+        machine.reset();
+        machine.processText("a=12b");
+        LOGGER.info("Machine in final state: {}", machine.isInFinalState());
     }
 }
