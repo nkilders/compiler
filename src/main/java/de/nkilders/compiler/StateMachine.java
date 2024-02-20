@@ -97,22 +97,20 @@ public abstract class StateMachine {
     /**
      * Creates and returns a new non-final state and sets it as the initial state of the machine
      * 
-     * @param name name of the state, only used for console logs
      * @return the newly created state
      */
-    protected State initialState(String name) {
-        return initialState(name, false);
+    protected State initialState() {
+        return initialState(false);
     }
 
     /**
      * Creates and returns a new state and sets it as the initial state of the machine
      * 
-     * @param name name of the state, only used for console logs
      * @param isFinal whether the state is a final state or not
      * @return the newly created state
      */
-    protected State initialState(String name, boolean isFinal) {
-        State state = state(name, isFinal);
+    protected State initialState(boolean isFinal) {
+        State state = state("init", isFinal);
 
         this.initialState = state;
         

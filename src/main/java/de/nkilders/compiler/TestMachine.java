@@ -4,7 +4,7 @@ public class TestMachine extends StateMachine {
 
     @Override
     protected void initStatesAndTransitions() {
-        var init = initialState("init");
+        var init = initialState();
         var digit = state("digit", true);
         var letter = state("letter", true);
         var err = errorState();
