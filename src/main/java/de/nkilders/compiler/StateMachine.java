@@ -12,14 +12,15 @@ public abstract class StateMachine {
     private State initialState;
     private State currentState;
     private State errorState;
+    private int stepsBeforeError;
 
     public StateMachine() {
         this.initialState = null;
         this.currentState = null;
         this.errorState = null;
+        this.stepsBeforeError = 0;
 
-        this.initStatesAndTransitions();
-        this.reset();
+        this.init();
     }
 
     /**
@@ -27,12 +28,23 @@ public abstract class StateMachine {
      */
     protected abstract void initStatesAndTransitions();
 
+    public void init() {
+        this.initStatesAndTransitions();
+        this.reset();
+    }
+
     /**
      * Processes a character and performs the transition to the next state
      * 
      * @param c character to process
      */
     public void step(char c) {
+        if(currentState == errorState) {
+            return;
+        }
+        
+        stepsBeforeError++;
+
         String str = String.valueOf(c);
 
         for(Transition t : currentState.transitions) {
@@ -69,6 +81,7 @@ public abstract class StateMachine {
      */
     public void reset() {
         this.currentState = this.initialState;
+        this.stepsBeforeError = 0;
     }
 
     /**
@@ -92,6 +105,10 @@ public abstract class StateMachine {
 
     public State getErrorState() {
         return errorState;
+    }
+
+    public int getStepsBeforeError() {
+        return stepsBeforeError;
     }
 
     /**
