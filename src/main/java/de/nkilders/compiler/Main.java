@@ -15,6 +15,8 @@ public class Main {
         Lexer lexer = new LexerImpl();
         String input = " //c\n ";
 
+        input = "+-/*()[]{}";
+
         List<Token> tokens = lexer.tokenize(input);
         tokens.forEach(t -> LOGGER.info(t.toString()));
     }

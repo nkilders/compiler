@@ -1,5 +1,16 @@
 package de.nkilders.compiler.lexer;
 
+import static de.nkilders.compiler.TokenType.DIV;
+import static de.nkilders.compiler.TokenType.LBRACE;
+import static de.nkilders.compiler.TokenType.LBRACKET;
+import static de.nkilders.compiler.TokenType.LPAREN;
+import static de.nkilders.compiler.TokenType.MINUS;
+import static de.nkilders.compiler.TokenType.MUL;
+import static de.nkilders.compiler.TokenType.PLUS;
+import static de.nkilders.compiler.TokenType.RBRACE;
+import static de.nkilders.compiler.TokenType.RBRACKET;
+import static de.nkilders.compiler.TokenType.RPAREN;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +43,13 @@ public class LexerImpl implements Lexer {
         int pos = 0;
         
         while(pos < input.length()) {
+            Token singleCharToken = singleCharToken(chars[pos]);
+            if(singleCharToken != null) {
+                tokens.add(singleCharToken);
+                pos++;
+                continue;
+            }
+
             resetMachines();
 
             int step = 0;
@@ -60,6 +78,26 @@ public class LexerImpl implements Lexer {
         }
 
         return tokens;
+    }
+
+    private Token singleCharToken(char c) {
+        TokenType type = switch(c) {
+            case '+' -> PLUS;
+            case '-' -> MINUS;
+            case '*' -> MUL;
+            case '/' -> DIV;
+            case '(' -> LPAREN;
+            case ')' -> RPAREN;
+            case '{' -> LBRACE;
+            case '}' -> RBRACE;
+            case '[' -> LBRACKET;
+            case ']' -> RBRACKET;
+            default -> null;
+        };
+
+        if(type == null) return null;
+
+        return new Token(type, c + "");
     }
 
     private void createMachines() {
