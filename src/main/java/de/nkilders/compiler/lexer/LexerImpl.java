@@ -75,8 +75,11 @@ public class LexerImpl implements Lexer {
                 step++;
             } while((pos+step) < input.length());
 
+            LineCol lineCol = Util.calculateLineAndCol(input, pos);
+
             if(step == 0) {
-                throwInvalidCharacter(input, pos);
+                String msg = String.format("Unable to process character \"%s\"", input.charAt(pos));
+                throw new CompilerException(msg, lineCol);
             }
 
             LexerMachine bestMachine = getMachineWithMostSteps();
@@ -86,19 +89,12 @@ public class LexerImpl implements Lexer {
             LOGGER.info("Number of steps: {}", step);
             LOGGER.info("Text: \"{}\"", text);
 
-            tokens.add(buildToken(bestMachine.getTokenType(), text));
+            tokens.add(buildToken(bestMachine.getTokenType(), text, lineCol));
 
             pos += step;
         }
 
         return tokens;
-    }
-
-    private void throwInvalidCharacter(String input, int pos) {
-        String msg = String.format("Unable to process character \"%s\"", input.charAt(pos));
-        LineCol lineCol = Util.calculateLineAndCol(input, pos);
-        
-        throw new CompilerException(msg, lineCol);
     }
 
     private void createMachines() {
@@ -132,16 +128,16 @@ public class LexerImpl implements Lexer {
         );
     }
 
-    private Token buildToken(TokenType type, String content) {
+    private Token buildToken(TokenType type, String content, LineCol lineCol) {
         if(type == TokenType.IDENTIFIER) {
             TokenType reservedKeywordType = ReservedKeyword.get(content);
 
             if(reservedKeywordType != null) {
-                return new Token(reservedKeywordType, content);
+                type = reservedKeywordType;
             }
         }
 
-        return new Token(type, content);
+        return new Token(type, content, lineCol.line(), lineCol.col());
     }
 
     private boolean anyMachineActive() {
