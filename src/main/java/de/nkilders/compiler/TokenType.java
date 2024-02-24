@@ -1,7 +1,7 @@
 package de.nkilders.compiler;
 
 public enum TokenType {
-    // SINGLE CHAR
+    // Static
     LPAREN,
     RPAREN,
     LBRACE,
@@ -13,17 +13,19 @@ public enum TokenType {
     MUL,
     DIV,
     EQUALS,
-    // MULTI CHAR
-    STRING,
-    IDENTIFIER,
-    LINE_COMMENT,
-    WHITESPACE,
-    NUMBER,
-    // RESERVED KEYWORDS
+    
+    // Static + Identifier-like
     FUNCTION,
     LET,
     CONST,
     IF,
     ELSE,
     WHILE,
+
+    // Dynamic
+    IDENTIFIER,
+    STRING,
+    LINE_COMMENT,
+    WHITESPACE,
+    NUMBER,
 }

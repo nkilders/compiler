@@ -96,22 +96,25 @@ public class LexerImpl implements Lexer {
 
     private void createMachines() {
         this.machines = List.of(
-            new LineCommentMachine(),
-            new WhitespaceMachine(),
-            new StringMachine(),
-            new IdentifierMachine(),
-            new NumberMachine(),
-            new KeywordMachine("+", PLUS),
-            new KeywordMachine("-", MINUS),
-            new KeywordMachine("*", MUL),
-            new KeywordMachine("/", DIV),
-            new KeywordMachine("=", EQUALS),
+            // Static
             new KeywordMachine("(", LPAREN),
             new KeywordMachine(")", RPAREN),
             new KeywordMachine("{", LBRACE),
             new KeywordMachine("}", RBRACE),
             new KeywordMachine("[", LBRACKET),
-            new KeywordMachine("]", RBRACKET)
+            new KeywordMachine("]", RBRACKET),
+            new KeywordMachine("+", PLUS),
+            new KeywordMachine("-", MINUS),
+            new KeywordMachine("*", MUL),
+            new KeywordMachine("/", DIV),
+            new KeywordMachine("=", EQUALS),
+        
+            // Dynamic
+            new LineCommentMachine(),
+            new WhitespaceMachine(),
+            new StringMachine(),
+            new IdentifierMachine(),
+            new NumberMachine()
         );
     }
 
