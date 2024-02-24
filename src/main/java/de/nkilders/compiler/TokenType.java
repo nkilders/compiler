@@ -17,4 +17,11 @@ public enum TokenType {
     IDENTIFIER,
     LINE_COMMENT,
     WHITESPACE,
+    // RESERVED KEYWORDS
+    FUNCTION,
+    LET,
+    CONST,
+    IF,
+    ELSE,
+    WHILE,
 }

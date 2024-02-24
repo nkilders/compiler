@@ -1,3 +1,10 @@
+let x = 10;
+const y = '"abc\\';
 
+if (y == 'blub') {
+	x = 11; // Hi :-)
+} else {
+	x = 12;
+}
 
-"abc\"123\\"  
+while (1 > 2) {}

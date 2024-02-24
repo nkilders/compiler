@@ -17,6 +17,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.nkilders.compiler.ReservedKeyword;
 import de.nkilders.compiler.Token;
 import de.nkilders.compiler.TokenType;
 import de.nkilders.compiler.lexer.machines.IdentifierMachine;
@@ -113,7 +114,11 @@ public class LexerImpl implements Lexer {
 
     private Token buildToken(TokenType type, String content) {
         if(type == TokenType.IDENTIFIER) {
-            // TODO: reserved keywords
+            TokenType reservedKeywordType = ReservedKeyword.get(content);
+
+            if(reservedKeywordType != null) {
+                return new Token(reservedKeywordType, content);
+            }
         }
 
         return new Token(type, content);
