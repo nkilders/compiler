@@ -1,16 +1,23 @@
 package de.nkilders.compiler.lexer;
 
-import static de.nkilders.compiler.TokenType.DIV;
+import static de.nkilders.compiler.TokenType.ASSIGN;
+import static de.nkilders.compiler.TokenType.COMMA;
+import static de.nkilders.compiler.TokenType.DIVIDE;
 import static de.nkilders.compiler.TokenType.EQUALS;
+import static de.nkilders.compiler.TokenType.GT;
+import static de.nkilders.compiler.TokenType.GTE;
 import static de.nkilders.compiler.TokenType.LBRACE;
 import static de.nkilders.compiler.TokenType.LBRACKET;
 import static de.nkilders.compiler.TokenType.LPAREN;
+import static de.nkilders.compiler.TokenType.LT;
+import static de.nkilders.compiler.TokenType.LTE;
 import static de.nkilders.compiler.TokenType.MINUS;
-import static de.nkilders.compiler.TokenType.MUL;
+import static de.nkilders.compiler.TokenType.MULTIPLY;
 import static de.nkilders.compiler.TokenType.PLUS;
 import static de.nkilders.compiler.TokenType.RBRACE;
 import static de.nkilders.compiler.TokenType.RBRACKET;
 import static de.nkilders.compiler.TokenType.RPAREN;
+import static de.nkilders.compiler.TokenType.SEMICOLON;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -105,9 +112,16 @@ public class LexerImpl implements Lexer {
             new KeywordMachine("]", RBRACKET),
             new KeywordMachine("+", PLUS),
             new KeywordMachine("-", MINUS),
-            new KeywordMachine("*", MUL),
-            new KeywordMachine("/", DIV),
-            new KeywordMachine("=", EQUALS),
+            new KeywordMachine("*", MULTIPLY),
+            new KeywordMachine("/", DIVIDE),
+            new KeywordMachine("==", EQUALS),
+            new KeywordMachine("=", ASSIGN),
+            new KeywordMachine(">", GT),
+            new KeywordMachine(">=", GTE),
+            new KeywordMachine("<", LT),
+            new KeywordMachine("<=", LTE),
+            new KeywordMachine(";", SEMICOLON),
+            new KeywordMachine(",", COMMA),
         
             // Dynamic
             new LineCommentMachine(),

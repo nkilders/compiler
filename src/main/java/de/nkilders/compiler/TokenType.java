@@ -10,9 +10,16 @@ public enum TokenType {
     RBRACKET,
     PLUS,
     MINUS,
-    MUL,
-    DIV,
+    MULTIPLY,
+    DIVIDE,
     EQUALS,
+    ASSIGN,
+    GT,
+    GTE,
+    LT,
+    LTE,
+    SEMICOLON,
+    COMMA,
     
     // Static + Identifier-like
     FUNCTION,
