@@ -12,6 +12,7 @@ import static de.nkilders.compiler.TokenType.RBRACKET;
 import static de.nkilders.compiler.TokenType.RPAREN;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -143,20 +144,10 @@ public class LexerImpl implements Lexer {
     }
 
     private LexerMachine getMachineWithMostSteps() {
-        LexerMachine bestMachine = null;
-
-        for(LexerMachine machine : machines) {
-            if(bestMachine == null) {
-                bestMachine = machine;
-                continue;
-            }
-
-            if(machine.getStepsBeforeError() > bestMachine.getStepsBeforeError()) {
-                bestMachine = machine;
-            }
-        }
-
-        return bestMachine;
+        return machines.stream()
+                       .sorted(Comparator.comparing(LexerMachine::getStepsBeforeError))
+                       .toList()
+                       .getLast();
     }
 
     private void resetMachines() {
