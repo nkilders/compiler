@@ -1,7 +1,7 @@
 let x = 10;
-const y = '"abc\\';
+const y = "\"abc\\";
 
-if (y == 'blub') {
+if (y == "blub") {
 	x = 11; // Hi :-)
 } else {
 	x = 12;
