@@ -1,4 +1,4 @@
-package de.nkilders.compiler.machine;
+package de.nkilders.compiler.util;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,7 @@
-package de.nkilders.compiler.machine;
+package de.nkilders.compiler.lexer.machines;
 
 import de.nkilders.compiler.TokenType;
+import de.nkilders.compiler.lexer.LexerMachine;
 
 public class IdentifierMachine extends LexerMachine {
 
