@@ -17,6 +17,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.nkilders.compiler.CompilerException;
 import de.nkilders.compiler.ReservedKeyword;
 import de.nkilders.compiler.Token;
 import de.nkilders.compiler.TokenType;
@@ -25,6 +26,8 @@ import de.nkilders.compiler.lexer.machines.LineCommentMachine;
 import de.nkilders.compiler.lexer.machines.StringMachine;
 import de.nkilders.compiler.lexer.machines.WhitespaceMachine;
 import de.nkilders.compiler.util.StateMachine;
+import de.nkilders.compiler.util.Util;
+import de.nkilders.compiler.util.Util.LineCol;
 
 public class LexerImpl implements Lexer {
     private static final Logger LOGGER = LoggerFactory.getLogger(LexerImpl.class);
@@ -68,6 +71,10 @@ public class LexerImpl implements Lexer {
                 step++;
             } while((pos+step) < input.length());
 
+            if(step == 0) {
+                throwInvalidCharacter(input, pos);
+            }
+
             LexerMachine bestMachine = getMachineWithMostSteps();
             String text = input.substring(pos, pos+step);
 
@@ -81,6 +88,13 @@ public class LexerImpl implements Lexer {
         }
 
         return tokens;
+    }
+
+    private void throwInvalidCharacter(String input, int pos) {
+        String msg = String.format("Unable to process character \"%s\"", input.charAt(pos));
+        LineCol lineCol = Util.calculateLineAndCol(input, pos);
+        
+        throw new CompilerException(msg, lineCol);
     }
 
     private Token singleCharToken(char c) {
