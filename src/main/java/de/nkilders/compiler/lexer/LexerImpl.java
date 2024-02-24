@@ -25,6 +25,7 @@ import de.nkilders.compiler.Token;
 import de.nkilders.compiler.TokenType;
 import de.nkilders.compiler.lexer.machines.IdentifierMachine;
 import de.nkilders.compiler.lexer.machines.LineCommentMachine;
+import de.nkilders.compiler.lexer.machines.NumberMachine;
 import de.nkilders.compiler.lexer.machines.StringMachine;
 import de.nkilders.compiler.lexer.machines.WhitespaceMachine;
 import de.nkilders.compiler.util.StateMachine;
@@ -125,7 +126,8 @@ public class LexerImpl implements Lexer {
             new LineCommentMachine(),
             new WhitespaceMachine(),
             new StringMachine(),
-            new IdentifierMachine()
+            new IdentifierMachine(),
+            new NumberMachine()
         );
     }
 
