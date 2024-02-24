@@ -1,6 +1,8 @@
 package de.nkilders.compiler.machine;
 
-public class StringMachine extends StateMachine {
+import de.nkilders.compiler.TokenType;
+
+public class StringMachine extends LexerMachine {
 
     @Override
     protected void initStatesAndTransitions() {
@@ -27,6 +29,11 @@ public class StringMachine extends StateMachine {
               .setFallbackTransitionState(err);
 
         end.setFallbackTransitionState(err);
+    }
+
+    @Override
+    public TokenType getTokenType() {
+        return TokenType.STRING;
     }
     
 }

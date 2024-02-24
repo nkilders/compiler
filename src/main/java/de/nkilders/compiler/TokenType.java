@@ -1,7 +1,6 @@
 package de.nkilders.compiler;
 
 public enum TokenType {
-    TEST,
     // SINGLE CHAR
     LPAREN,
     RPAREN,
@@ -13,4 +12,9 @@ public enum TokenType {
     MINUS,
     MUL,
     DIV,
+    // MULTI CHAR
+    STRING,
+    IDENTIFIER,
+    LINE_COMMENT,
+    WHITESPACE,
 }

@@ -1,6 +1,8 @@
 package de.nkilders.compiler.machine;
 
-public class LineCommentMachine extends StateMachine {
+import de.nkilders.compiler.TokenType;
+
+public class LineCommentMachine extends LexerMachine {
 
     @Override
     protected void initStatesAndTransitions() {
@@ -21,5 +23,10 @@ public class LineCommentMachine extends StateMachine {
 
         content.addTransition(content, ".")
                .setFallbackTransitionState(err);
+    }
+
+    @Override
+    public TokenType getTokenType() {
+        return TokenType.LINE_COMMENT;
     }
 }

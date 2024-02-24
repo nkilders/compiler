@@ -1,6 +1,8 @@
 package de.nkilders.compiler.machine;
 
-public class WhitespaceMachine extends StateMachine {
+import de.nkilders.compiler.TokenType;
+
+public class WhitespaceMachine extends LexerMachine {
 
     @Override
     protected void initStatesAndTransitions() {
@@ -13,5 +15,10 @@ public class WhitespaceMachine extends StateMachine {
         
         whitespace.addTransition(whitespace, "\\s")
                   .setFallbackTransitionState(err);
+    }
+
+    @Override
+    public TokenType getTokenType() {
+        return TokenType.WHITESPACE;
     }
 }

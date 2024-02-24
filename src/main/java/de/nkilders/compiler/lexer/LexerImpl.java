@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import de.nkilders.compiler.Token;
 import de.nkilders.compiler.TokenType;
 import de.nkilders.compiler.machine.IdentifierMachine;
+import de.nkilders.compiler.machine.LexerMachine;
 import de.nkilders.compiler.machine.LineCommentMachine;
 import de.nkilders.compiler.machine.StateMachine;
 import de.nkilders.compiler.machine.StringMachine;
@@ -28,7 +29,7 @@ import de.nkilders.compiler.machine.WhitespaceMachine;
 public class LexerImpl implements Lexer {
     private static final Logger LOGGER = LoggerFactory.getLogger(LexerImpl.class);
 
-    private List<StateMachine> machines;
+    private List<LexerMachine> machines;
 
     public LexerImpl() {
         this.machines = new ArrayList<>();
@@ -67,14 +68,14 @@ public class LexerImpl implements Lexer {
                 step++;
             } while((pos+step) < input.length());
 
-            StateMachine bestMachine = getMachineWithMostSteps();
+            LexerMachine bestMachine = getMachineWithMostSteps();
             String text = input.substring(pos, pos+step);
 
             LOGGER.info("Best machine: {}", bestMachine);
             LOGGER.info("Number of steps: {}", step);
             LOGGER.info("Text: \"{}\"", text);
 
-            tokens.add(new Token(TokenType.TEST, text));
+            tokens.add(buildToken(bestMachine.getTokenType(), text));
 
             pos += step;
         }
@@ -111,14 +112,22 @@ public class LexerImpl implements Lexer {
         );
     }
 
+    private Token buildToken(TokenType type, String content) {
+        if(type == TokenType.IDENTIFIER) {
+            // TODO: reserved keywords
+        }
+
+        return new Token(type, content);
+    }
+
     private boolean anyMachineActive() {
         return this.machines.stream().anyMatch(m -> !m.isInErrorState());
     }
 
-    private StateMachine getMachineWithMostSteps() {
-        StateMachine bestMachine = null;
+    private LexerMachine getMachineWithMostSteps() {
+        LexerMachine bestMachine = null;
 
-        for(StateMachine machine : machines) {
+        for(LexerMachine machine : machines) {
             if(bestMachine == null) {
                 bestMachine = machine;
                 continue;

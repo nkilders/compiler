@@ -1,6 +1,8 @@
 package de.nkilders.compiler.machine;
 
-public class IdentifierMachine extends StateMachine {
+import de.nkilders.compiler.TokenType;
+
+public class IdentifierMachine extends LexerMachine {
 
     @Override
     protected void initStatesAndTransitions() {
@@ -17,5 +19,10 @@ public class IdentifierMachine extends StateMachine {
 
         more.addTransition(more, "\\w")
             .setFallbackTransitionState(err);
+    }
+
+    @Override
+    public TokenType getTokenType() {
+        return TokenType.IDENTIFIER;
     }
 }
