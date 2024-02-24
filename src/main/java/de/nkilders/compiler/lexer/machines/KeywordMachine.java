@@ -33,17 +33,28 @@ public class KeywordMachine extends LexerMachine {
         }
 
         // Link first
-        init.addTransition(states[0], chars[0])
+        init.addTransition(states[0], escapeRegEx(chars[0]))
             .setFallbackTransitionState(err);
 
         // Link middle states
         for(int i = 0; i < (states.length - 1); i++) {
-            states[i].addTransition(states[i+1], chars[i+1])
+            states[i].addTransition(states[i+1], escapeRegEx(chars[i+1]))
                      .setFallbackTransitionState(err);
         }
 
         // Link last state
         states[states.length-1].setFallbackTransitionState(err);
+    }
+
+    private String escapeRegEx(String input) {
+        return input.replace("(", "\\(")
+                    .replace(")", "\\)")
+                    .replace("{", "\\{")
+                    .replace("}", "\\}")
+                    .replace("[", "\\[")
+                    .replace("]", "\\]")
+                    .replace("+", "\\+")
+                    .replace("*", "\\*");
     }
 
     @Override
