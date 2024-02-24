@@ -24,6 +24,7 @@ import de.nkilders.compiler.ReservedKeyword;
 import de.nkilders.compiler.Token;
 import de.nkilders.compiler.TokenType;
 import de.nkilders.compiler.lexer.machines.IdentifierMachine;
+import de.nkilders.compiler.lexer.machines.KeywordMachine;
 import de.nkilders.compiler.lexer.machines.LineCommentMachine;
 import de.nkilders.compiler.lexer.machines.NumberMachine;
 import de.nkilders.compiler.lexer.machines.StringMachine;
@@ -52,13 +53,6 @@ public class LexerImpl implements Lexer {
         int pos = 0;
         
         while(pos < input.length()) {
-            Token singleCharToken = singleCharToken(chars[pos]);
-            if(singleCharToken != null) {
-                tokens.add(singleCharToken);
-                pos++;
-                continue;
-            }
-
             resetMachines();
 
             int step = 0;
@@ -100,34 +94,24 @@ public class LexerImpl implements Lexer {
         throw new CompilerException(msg, lineCol);
     }
 
-    private Token singleCharToken(char c) {
-        TokenType type = switch(c) {
-            case '+' -> PLUS;
-            case '-' -> MINUS;
-            case '*' -> MUL;
-            case '/' -> DIV;
-            case '=' -> EQUALS;
-            case '(' -> LPAREN;
-            case ')' -> RPAREN;
-            case '{' -> LBRACE;
-            case '}' -> RBRACE;
-            case '[' -> LBRACKET;
-            case ']' -> RBRACKET;
-            default -> null;
-        };
-
-        if(type == null) return null;
-
-        return new Token(type, c + "");
-    }
-
     private void createMachines() {
         this.machines = List.of(
             new LineCommentMachine(),
             new WhitespaceMachine(),
             new StringMachine(),
             new IdentifierMachine(),
-            new NumberMachine()
+            new NumberMachine(),
+            new KeywordMachine("+", PLUS),
+            new KeywordMachine("-", MINUS),
+            new KeywordMachine("*", MUL),
+            new KeywordMachine("/", DIV),
+            new KeywordMachine("=", EQUALS),
+            new KeywordMachine("(", LPAREN),
+            new KeywordMachine(")", RPAREN),
+            new KeywordMachine("{", LBRACE),
+            new KeywordMachine("}", RBRACE),
+            new KeywordMachine("[", LBRACKET),
+            new KeywordMachine("]", RBRACKET)
         );
     }
 
@@ -149,6 +133,9 @@ public class LexerImpl implements Lexer {
 
     private LexerMachine getMachineWithMostSteps() {
         return machines.stream()
+                        // When the last character of a file has been read, not all machines have to
+                        // be in error state. For that case  we need to filter based on both conditions.
+                       .filter(m -> m.wasInFinalStateBeforeError() || m.isInFinalState())
                        .sorted(Comparator.comparing(LexerMachine::getStepsBeforeError))
                        .toList()
                        .getLast();

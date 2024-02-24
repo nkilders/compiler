@@ -13,14 +13,22 @@ public abstract class StateMachine {
     private State currentState;
     private State errorState;
     private int stepsBeforeError;
+    private boolean inFinalStateBeforeError;
 
-    public StateMachine() {
+    public StateMachine(boolean initialize) {
         this.initialState = null;
         this.currentState = null;
         this.errorState = null;
         this.stepsBeforeError = 0;
+        this.inFinalStateBeforeError = false;
 
-        this.init();
+        if(initialize) {
+            this.init();
+        }
+    }
+
+    public StateMachine() {
+        this(true);
     }
 
     /**
@@ -50,7 +58,7 @@ public abstract class StateMachine {
         for(Transition t : currentState.transitions) {
             if(str.matches(t.on())) {
                 LOGGER.debug("{}({}) -> {}", currentState.name, c, t.to().name);
-                currentState = t.to();
+                updateState(t.to());
                 return;
             }
         }
@@ -62,7 +70,7 @@ public abstract class StateMachine {
         }
 
         LOGGER.debug("{}({}) -> {} (fallback)", currentState.name, c, currentState.fallbackTransitionState.name);
-        currentState = currentState.fallbackTransitionState;
+        updateState(currentState.fallbackTransitionState);
     }
 
     /**
@@ -82,6 +90,7 @@ public abstract class StateMachine {
     public void reset() {
         this.currentState = this.initialState;
         this.stepsBeforeError = 0;
+        this.inFinalStateBeforeError = false;
     }
 
     /**
@@ -109,6 +118,10 @@ public abstract class StateMachine {
 
     public int getStepsBeforeError() {
         return stepsBeforeError;
+    }
+
+    public boolean wasInFinalStateBeforeError() {
+        return inFinalStateBeforeError;
     }
 
     /**
@@ -167,6 +180,14 @@ public abstract class StateMachine {
         this.errorState = state;
 
         return state;
+    }
+
+    private void updateState(State newState) {
+        if(currentState.isFinal() && newState == errorState) {
+            inFinalStateBeforeError = true;
+        }
+
+        currentState = newState;
     }
 
     protected class State {
