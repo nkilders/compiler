@@ -19,8 +19,10 @@ import org.slf4j.LoggerFactory;
 
 import de.nkilders.compiler.Token;
 import de.nkilders.compiler.TokenType;
+import de.nkilders.compiler.machine.IdentifierMachine;
 import de.nkilders.compiler.machine.LineCommentMachine;
 import de.nkilders.compiler.machine.StateMachine;
+import de.nkilders.compiler.machine.StringMachine;
 import de.nkilders.compiler.machine.WhitespaceMachine;
 
 public class LexerImpl implements Lexer {
@@ -103,7 +105,9 @@ public class LexerImpl implements Lexer {
     private void createMachines() {
         this.machines = List.of(
             new LineCommentMachine(),
-            new WhitespaceMachine()
+            new WhitespaceMachine(),
+            new StringMachine(),
+            new IdentifierMachine()
         );
     }
 
