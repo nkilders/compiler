@@ -12,6 +12,7 @@ public enum TokenType {
     MINUS,
     MUL,
     DIV,
+    EQUALS,
     // MULTI CHAR
     STRING,
     IDENTIFIER,

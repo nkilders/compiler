@@ -1,6 +1,7 @@
 package de.nkilders.compiler.lexer;
 
 import static de.nkilders.compiler.TokenType.DIV;
+import static de.nkilders.compiler.TokenType.EQUALS;
 import static de.nkilders.compiler.TokenType.LBRACE;
 import static de.nkilders.compiler.TokenType.LBRACKET;
 import static de.nkilders.compiler.TokenType.LPAREN;
@@ -104,6 +105,7 @@ public class LexerImpl implements Lexer {
             case '-' -> MINUS;
             case '*' -> MUL;
             case '/' -> DIV;
+            case '=' -> EQUALS;
             case '(' -> LPAREN;
             case ')' -> RPAREN;
             case '{' -> LBRACE;
