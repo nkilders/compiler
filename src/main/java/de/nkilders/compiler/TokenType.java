@@ -12,6 +12,7 @@ public enum TokenType {
     MINUS,
     MULTIPLY,
     DIVIDE,
+    MODULO,
     EQUALS,
     ASSIGN,
     GT,
@@ -20,6 +21,8 @@ public enum TokenType {
     LTE,
     SEMICOLON,
     COMMA,
+    AND,
+    OR,
     
     // Static + Identifier-like
     FUNCTION,
@@ -28,6 +31,8 @@ public enum TokenType {
     IF,
     ELSE,
     WHILE,
+    TRUE,
+    FALSE,
 
     // Dynamic
     IDENTIFIER,

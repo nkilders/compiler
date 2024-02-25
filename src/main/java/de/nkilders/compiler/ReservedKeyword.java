@@ -2,9 +2,11 @@ package de.nkilders.compiler;
 
 import static de.nkilders.compiler.TokenType.CONST;
 import static de.nkilders.compiler.TokenType.ELSE;
+import static de.nkilders.compiler.TokenType.FALSE;
 import static de.nkilders.compiler.TokenType.FUNCTION;
 import static de.nkilders.compiler.TokenType.IF;
 import static de.nkilders.compiler.TokenType.LET;
+import static de.nkilders.compiler.TokenType.TRUE;
 import static de.nkilders.compiler.TokenType.WHILE;
 
 import java.util.HashMap;
@@ -22,6 +24,8 @@ public class ReservedKeyword {
         keyword("if", IF);
         keyword("else", ELSE);
         keyword("while", WHILE);
+        keyword("true", TRUE);
+        keyword("false", FALSE);
     }
 
     private static void keyword(String key, TokenType type) {

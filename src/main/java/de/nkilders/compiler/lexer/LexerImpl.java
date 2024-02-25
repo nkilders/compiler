@@ -1,5 +1,6 @@
 package de.nkilders.compiler.lexer;
 
+import static de.nkilders.compiler.TokenType.AND;
 import static de.nkilders.compiler.TokenType.ASSIGN;
 import static de.nkilders.compiler.TokenType.COMMA;
 import static de.nkilders.compiler.TokenType.DIVIDE;
@@ -12,7 +13,9 @@ import static de.nkilders.compiler.TokenType.LPAREN;
 import static de.nkilders.compiler.TokenType.LT;
 import static de.nkilders.compiler.TokenType.LTE;
 import static de.nkilders.compiler.TokenType.MINUS;
+import static de.nkilders.compiler.TokenType.MODULO;
 import static de.nkilders.compiler.TokenType.MULTIPLY;
+import static de.nkilders.compiler.TokenType.OR;
 import static de.nkilders.compiler.TokenType.PLUS;
 import static de.nkilders.compiler.TokenType.RBRACE;
 import static de.nkilders.compiler.TokenType.RBRACKET;
@@ -110,6 +113,7 @@ public class LexerImpl implements Lexer {
             new KeywordMachine("-", MINUS),
             new KeywordMachine("*", MULTIPLY),
             new KeywordMachine("/", DIVIDE),
+            new KeywordMachine("%", MODULO),
             new KeywordMachine("==", EQUALS),
             new KeywordMachine("=", ASSIGN),
             new KeywordMachine(">", GT),
@@ -118,6 +122,8 @@ public class LexerImpl implements Lexer {
             new KeywordMachine("<=", LTE),
             new KeywordMachine(";", SEMICOLON),
             new KeywordMachine(",", COMMA),
+            new KeywordMachine("&&", AND),
+            new KeywordMachine("||", OR),
         
             // Dynamic
             new LineCommentMachine(),
