@@ -38,6 +38,7 @@ public enum TokenType {
     IDENTIFIER,
     STRING,
     LINE_COMMENT,
+    MULTI_LINE_COMMENT,
     WHITESPACE,
     NUMBER,
 }
