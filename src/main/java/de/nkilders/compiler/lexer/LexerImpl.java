@@ -4,6 +4,7 @@ import static de.nkilders.compiler.TokenType.AND;
 import static de.nkilders.compiler.TokenType.ASSIGN;
 import static de.nkilders.compiler.TokenType.COMMA;
 import static de.nkilders.compiler.TokenType.DIVIDE;
+import static de.nkilders.compiler.TokenType.EOF;
 import static de.nkilders.compiler.TokenType.EQUALS;
 import static de.nkilders.compiler.TokenType.GT;
 import static de.nkilders.compiler.TokenType.GTE;
@@ -97,6 +98,9 @@ public class LexerImpl implements Lexer {
 
             pos += step;
         }
+
+        LineCol lineCol = Util.calculateLineAndCol(input, pos);
+        tokens.add(buildToken(EOF, "", lineCol));
 
         return tokens;
     }

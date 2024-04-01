@@ -41,4 +41,6 @@ public enum TokenType {
     MULTI_LINE_COMMENT,
     WHITESPACE,
     NUMBER,
+
+    EOF,
 }
