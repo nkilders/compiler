@@ -8,18 +8,12 @@ public class NumberMachine extends LexerMachine {
     @Override
     protected void initStatesAndTransitions() {
         var init = initialState();
-        var sign = state("sign");
         var preDot = state("pre dot", true);
         var dot = state("dot");
         var postDot = state("post dot", true);
         var err = errorState();
 
-        init.addTransition(sign, "[\\+-]")
-            .addTransition(preDot, "\\d")
-            .addTransition(dot, "\\.")
-            .setFallbackTransitionState(err);
-
-        sign.addTransition(preDot, "\\d")
+        init.addTransition(preDot, "\\d")
             .addTransition(dot, "\\.")
             .setFallbackTransitionState(err);
 
