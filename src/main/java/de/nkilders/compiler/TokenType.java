@@ -23,6 +23,7 @@ public enum TokenType {
     COMMA,
     AND,
     OR,
+    NOT,
     
     // Static + Identifier-like
     FUNCTION,

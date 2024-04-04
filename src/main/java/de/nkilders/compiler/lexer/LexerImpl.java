@@ -16,6 +16,7 @@ import static de.nkilders.compiler.TokenType.LTE;
 import static de.nkilders.compiler.TokenType.MINUS;
 import static de.nkilders.compiler.TokenType.MODULO;
 import static de.nkilders.compiler.TokenType.MULTIPLY;
+import static de.nkilders.compiler.TokenType.NOT;
 import static de.nkilders.compiler.TokenType.OR;
 import static de.nkilders.compiler.TokenType.PLUS;
 import static de.nkilders.compiler.TokenType.RBRACE;
@@ -129,6 +130,7 @@ public class LexerImpl implements Lexer {
             new KeywordMachine(",", COMMA),
             new KeywordMachine("&&", AND),
             new KeywordMachine("||", OR),
+            new KeywordMachine("!", NOT),
         
             // Dynamic
             new LineCommentMachine(),
