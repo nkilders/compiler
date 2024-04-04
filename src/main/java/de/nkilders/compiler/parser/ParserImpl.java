@@ -7,6 +7,7 @@ import static de.nkilders.compiler.TokenType.LPAREN;
 import static de.nkilders.compiler.TokenType.MINUS;
 import static de.nkilders.compiler.TokenType.MULTIPLY;
 import static de.nkilders.compiler.TokenType.MULTI_LINE_COMMENT;
+import static de.nkilders.compiler.TokenType.NOT;
 import static de.nkilders.compiler.TokenType.PLUS;
 import static de.nkilders.compiler.TokenType.RPAREN;
 import static de.nkilders.compiler.TokenType.WHITESPACE;
@@ -22,6 +23,7 @@ import de.nkilders.compiler.parser.ast.ExprNode;
 import de.nkilders.compiler.parser.ast.NumericExprNode;
 import de.nkilders.compiler.parser.ast.RootNode;
 import de.nkilders.compiler.parser.ast.StmtNode;
+import de.nkilders.compiler.parser.ast.UnaryExprNode;
 import de.nkilders.compiler.parser.ast.VarExprNode;
 
 public class ParserImpl implements Parser {
@@ -115,13 +117,13 @@ public class ParserImpl implements Parser {
         return token.type() == PLUS || token.type() == MINUS;
     }
     
-    // MulExpr -> PrimaryExpr ( ( MULTIPLY | DIVIDE ) PrimaryExpr )*
+    // MulExpr -> UnaryExpr ( ( MULTIPLY | DIVIDE ) UnaryExpr )*
     private ExprNode parseMulExpr() {
-        ExprNode left = parsePrimaryExpr();
+        ExprNode left = parseUnaryExpr();
 
         while(isMulOperator(current())) {
             Token operator = advance();
-            ExprNode right = parsePrimaryExpr();
+            ExprNode right = parseUnaryExpr();
 
             left = new BinaryExprNode(left, right, operator);
         }
@@ -131,6 +133,19 @@ public class ParserImpl implements Parser {
 
     private boolean isMulOperator(Token token) {
         return token.type() == MULTIPLY || token.type() == DIVIDE;
+    }
+
+    // UnaryExpr -> ( ( PLUS | MINUS | NOT ) UnaryExpr ) | PrimaryExpr
+    private ExprNode parseUnaryExpr() {
+        if(isUnaryOperator(current())) {
+            return new UnaryExprNode(advance().content(), parseUnaryExpr());
+        }
+
+        return parsePrimaryExpr();
+    }
+
+    private boolean isUnaryOperator(Token token) {
+        return token.type() == PLUS || token.type() == MINUS || token.type() == NOT;
     }
     
     // PrimaryExpr -> NUMBER | IDENTIFIER | ParenExpr
