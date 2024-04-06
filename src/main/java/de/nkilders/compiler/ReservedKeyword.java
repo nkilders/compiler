@@ -6,6 +6,7 @@ import static de.nkilders.compiler.TokenType.FALSE;
 import static de.nkilders.compiler.TokenType.FUNCTION;
 import static de.nkilders.compiler.TokenType.IF;
 import static de.nkilders.compiler.TokenType.LET;
+import static de.nkilders.compiler.TokenType.NULL;
 import static de.nkilders.compiler.TokenType.TRUE;
 import static de.nkilders.compiler.TokenType.WHILE;
 
@@ -26,6 +27,7 @@ public class ReservedKeyword {
         keyword("while", WHILE);
         keyword("true", TRUE);
         keyword("false", FALSE);
+        keyword("null", NULL);
     }
 
     private static void keyword(String key, TokenType type) {

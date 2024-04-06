@@ -34,6 +34,7 @@ public enum TokenType {
     WHILE,
     TRUE,
     FALSE,
+    NULL,
 
     // Dynamic
     IDENTIFIER,
