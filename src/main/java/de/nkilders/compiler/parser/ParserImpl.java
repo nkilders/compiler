@@ -83,7 +83,7 @@ public class ParserImpl implements Parser {
 
         if(actualType != expectedType) {
             String message = String.format("Expected %s token but found %s", expectedType, actualType);
-            throw new CompilerException(message, current().line(), current().col());
+            throw new CompilerException(message, current().pos());
         }
 
         advance();
@@ -158,7 +158,7 @@ public class ParserImpl implements Parser {
             case LPAREN -> parseParenExpr();
             default -> {
                 String message = String.format("Unexpected token of type %s", t.type());
-                throw new CompilerException(message, t.line(), t.col());
+                throw new CompilerException(message, t.pos());
             }
         };
     }

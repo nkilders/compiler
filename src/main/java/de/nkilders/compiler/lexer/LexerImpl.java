@@ -151,7 +151,7 @@ public class LexerImpl implements Lexer {
             }
         }
 
-        return new Token(type, content, lineCol.line(), lineCol.col());
+        return new Token(type, content, lineCol);
     }
 
     private boolean anyMachineActive() {

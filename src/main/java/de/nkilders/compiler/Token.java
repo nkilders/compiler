@@ -1,4 +1,6 @@
 package de.nkilders.compiler;
 
-public record Token(TokenType type, String content, int line, int col) {
+import de.nkilders.compiler.util.Util.LineCol;
+
+public record Token(TokenType type, String content, LineCol pos) {
 }
