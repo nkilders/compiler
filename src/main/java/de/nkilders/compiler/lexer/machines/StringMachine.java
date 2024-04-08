@@ -19,6 +19,7 @@ public class StringMachine extends LexerMachine {
 
         start.addTransition(escape, "\\\\")
              .addTransition(content, ".")
+             .addTransition(end, "\"")
              .setFallbackTransitionState(err);
 
         content.addTransition(escape, "\\\\")

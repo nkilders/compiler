@@ -19,10 +19,12 @@ import de.nkilders.compiler.CompilerException;
 import de.nkilders.compiler.Token;
 import de.nkilders.compiler.TokenType;
 import de.nkilders.compiler.parser.ast.BinaryExprNode;
+import de.nkilders.compiler.parser.ast.BooleanExprNode;
 import de.nkilders.compiler.parser.ast.ExprNode;
 import de.nkilders.compiler.parser.ast.NumericExprNode;
 import de.nkilders.compiler.parser.ast.RootNode;
 import de.nkilders.compiler.parser.ast.StmtNode;
+import de.nkilders.compiler.parser.ast.StringExprNode;
 import de.nkilders.compiler.parser.ast.UnaryExprNode;
 import de.nkilders.compiler.parser.ast.VarExprNode;
 
@@ -155,12 +157,19 @@ public class ParserImpl implements Parser {
         return switch (t.type()) {
             case NUMBER -> new NumericExprNode(Double.parseDouble(advance().content()));
             case IDENTIFIER -> new VarExprNode(advance().content());
+            case TRUE, FALSE -> new BooleanExprNode(Boolean.parseBoolean(advance().content()));
+            case STRING -> parseString(advance().content());
             case LPAREN -> parseParenExpr();
             default -> {
                 String message = String.format("Unexpected token of type %s", t.type());
                 throw new CompilerException(message, t.pos());
             }
         };
+    }
+
+    private StringExprNode parseString(String s) {
+        s = s.substring(1, s.length() - 1);
+        return new StringExprNode(s);
     }
 
     // ParenExpr -> LPAREN Expr RPAREN
