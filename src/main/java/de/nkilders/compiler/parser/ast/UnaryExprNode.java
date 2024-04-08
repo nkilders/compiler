@@ -24,8 +24,15 @@ public class UnaryExprNode extends ExprNode {
             return new BooleanValue(result);
         }
 
-        String message = String.format("Operator %s is not defined for value %s", operator, expVal.getClass().getSimpleName());
-        throw new UnsupportedOperationException(message);
+        throw unsupportedOperation(expVal);
+    }
+
+    private RuntimeException unsupportedOperation(RuntimeValue<?> val) {
+        String message = String.format("Operator %s is not defined for %s",
+            operator,
+            val.getClass().getSimpleName()
+        );
+        return new UnsupportedOperationException(message);
     }
     
     public TokenType getOperator() {

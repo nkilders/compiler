@@ -29,8 +29,7 @@ public class BinaryExprNode extends ExprNode {
             return evalStr(l, r);
         }
 
-        String message = String.format("Operator %s is not defined for values %s and %s", operator, l.getClass().getSimpleName(), r.getClass().getSimpleName());
-        throw new UnsupportedOperationException(message);
+        throw unsupportedOperation(l, r);
     }
 
     private NumberValue evalNumNum(NumberValue left, NumberValue right) {
@@ -42,7 +41,7 @@ public class BinaryExprNode extends ExprNode {
             case MINUS -> l - r;
             case MULTIPLY -> l * r;
             case DIVIDE -> l / r;
-            default -> throw new UnsupportedOperationException(operator.name());
+            default -> throw unsupportedOperation(left, right);
         };
 
         return new NumberValue(result);
@@ -52,9 +51,21 @@ public class BinaryExprNode extends ExprNode {
         String l = left.getValue().toString();
         String r = right.getValue().toString();
 
-        String result = l.concat(r);
+        String result = switch(operator) {
+            case PLUS -> l.concat(r);
+            default -> throw unsupportedOperation(left, right);
+        };
 
         return new StringValue(result);
+    }
+
+    private RuntimeException unsupportedOperation(RuntimeValue<?> l, RuntimeValue<?> r) {
+        String message = String.format("Operator %s is not defined for %s and %s",
+            operator, 
+            l.getClass().getSimpleName(), 
+            r.getClass().getSimpleName()
+        );
+        return new UnsupportedOperationException(message);
     }
 
     public ExprNode getLeft() {
@@ -72,5 +83,5 @@ public class BinaryExprNode extends ExprNode {
     @Override
     public String toString() {
         return "BinaryExprNode [left=" + left + ", right=" + right + ", operator=" + operator + "]";
-    }   
+    }
 }
