@@ -1,5 +1,7 @@
 package de.nkilders.compiler.parser.ast;
 
+import de.nkilders.compiler.interpreter.values.NumberValue;
+
 public class NumericExprNode extends ExprNode {
     private double value;
 
@@ -8,8 +10,8 @@ public class NumericExprNode extends ExprNode {
     }
 
     @Override
-    public double eval() {
-        return value;
+    public NumberValue eval() {
+        return new NumberValue(value);
     }
 
     @Override

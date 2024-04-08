@@ -1,21 +1,34 @@
 package de.nkilders.compiler.parser.ast;
 
+import static de.nkilders.compiler.TokenType.NOT;
+
+import de.nkilders.compiler.TokenType;
+import de.nkilders.compiler.interpreter.values.BooleanValue;
+import de.nkilders.compiler.interpreter.values.RuntimeValue;
+
 public class UnaryExprNode extends ExprNode {
-    private String operator;
+    private TokenType operator;
     private ExprNode expression;
 
-    public UnaryExprNode(String operator, ExprNode expression) {
+    public UnaryExprNode(TokenType operator, ExprNode expression) {
         this.operator = operator;
         this.expression = expression;
     }
 
     @Override
-    public double eval() {
-        // TODO: Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'eval'");
+    public RuntimeValue<?> eval() {
+        RuntimeValue<?> expVal = expression.eval();
+        
+        if(expVal instanceof BooleanValue bool && operator == NOT) {
+            boolean result = !bool.getValue();
+            return new BooleanValue(result);
+        }
+
+        String message = String.format("Operator %s is not defined for value %s", operator, expVal.getClass().getSimpleName());
+        throw new UnsupportedOperationException(message);
     }
     
-    public String getOperator() {
+    public TokenType getOperator() {
         return operator;
     }
 

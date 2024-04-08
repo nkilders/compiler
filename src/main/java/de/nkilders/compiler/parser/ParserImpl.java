@@ -107,7 +107,7 @@ public class ParserImpl implements Parser {
             Token operator = advance();
             ExprNode right = parseMulExpr();
 
-            left = new BinaryExprNode(left, right, operator);
+            left = new BinaryExprNode(left, right, operator.type());
         }
 
         return left;
@@ -125,7 +125,7 @@ public class ParserImpl implements Parser {
             Token operator = advance();
             ExprNode right = parseUnaryExpr();
 
-            left = new BinaryExprNode(left, right, operator);
+            left = new BinaryExprNode(left, right, operator.type());
         }
 
         return left;
@@ -138,7 +138,7 @@ public class ParserImpl implements Parser {
     // UnaryExpr -> ( ( PLUS | MINUS | NOT ) UnaryExpr ) | PrimaryExpr
     private ExprNode parseUnaryExpr() {
         if(isUnaryOperator(current())) {
-            return new UnaryExprNode(advance().content(), parseUnaryExpr());
+            return new UnaryExprNode(advance().type(), parseUnaryExpr());
         }
 
         return parsePrimaryExpr();

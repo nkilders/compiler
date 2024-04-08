@@ -1,5 +1,7 @@
 package de.nkilders.compiler.parser.ast;
 
+import de.nkilders.compiler.interpreter.values.RuntimeValue;
+
 public class VarExprNode extends ExprNode {
     private String varName;
 
@@ -8,7 +10,7 @@ public class VarExprNode extends ExprNode {
     }
 
     @Override
-    public double eval() {
+    public RuntimeValue<?> eval() {
         // TODO: Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'eval'");
     }

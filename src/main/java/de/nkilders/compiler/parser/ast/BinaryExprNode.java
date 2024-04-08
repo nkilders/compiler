@@ -1,30 +1,60 @@
 package de.nkilders.compiler.parser.ast;
 
-import de.nkilders.compiler.Token;
+import de.nkilders.compiler.TokenType;
+import de.nkilders.compiler.interpreter.values.NumberValue;
+import de.nkilders.compiler.interpreter.values.RuntimeValue;
+import de.nkilders.compiler.interpreter.values.StringValue;
 
 public class BinaryExprNode extends ExprNode {
     private ExprNode left;
     private ExprNode right;
-    private Token operator;
+    private TokenType operator;
 
-    public BinaryExprNode(ExprNode left, ExprNode right, Token operator) {
+    public BinaryExprNode(ExprNode left, ExprNode right, TokenType operator) {
         this.left = left;
         this.right = right;
         this.operator = operator;
     }
 
     @Override
-    public double eval() {
-        double l = left.eval();
-        double r = right.eval();
+    public RuntimeValue<?> eval() {
+        RuntimeValue<?> l = left.eval();
+        RuntimeValue<?> r = right.eval();
 
-        return switch(operator.type()) {
+        if(l instanceof NumberValue ll && r instanceof NumberValue rr) {
+            return evalNumNum(ll, rr);
+        }
+
+        if(l instanceof StringValue || r instanceof StringValue) {
+            return evalStr(l, r);
+        }
+
+        String message = String.format("Operator %s is not defined for values %s and %s", operator, l.getClass().getSimpleName(), r.getClass().getSimpleName());
+        throw new UnsupportedOperationException(message);
+    }
+
+    private NumberValue evalNumNum(NumberValue left, NumberValue right) {
+        double l = left.getValue();
+        double r = right.getValue();
+
+        double result = switch(operator) {
             case PLUS -> l + r;
             case MINUS -> l - r;
             case MULTIPLY -> l * r;
             case DIVIDE -> l / r;
-            default -> throw new UnsupportedOperationException(operator.type().name());
+            default -> throw new UnsupportedOperationException(operator.name());
         };
+
+        return new NumberValue(result);
+    }
+
+    private StringValue evalStr(RuntimeValue<?> left, RuntimeValue<?> right) {
+        String l = left.getValue().toString();
+        String r = right.getValue().toString();
+
+        String result = l.concat(r);
+
+        return new StringValue(result);
     }
 
     public ExprNode getLeft() {
@@ -35,7 +65,7 @@ public class BinaryExprNode extends ExprNode {
         return right;
     }
 
-    public Token getOperator() {
+    public TokenType getOperator() {
         return operator;
     }
 
