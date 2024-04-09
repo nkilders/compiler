@@ -150,15 +150,15 @@ public class ParserImpl implements Parser {
         return token.type() == PLUS || token.type() == MINUS || token.type() == NOT;
     }
     
-    // PrimaryExpr -> NUMBER | IDENTIFIER | ParenExpr
+    // PrimaryExpr -> NUMBER | TRUE | FALSE | STRING | IDENTIFIER | ParenExpr
     private ExprNode parsePrimaryExpr() throws CompilerException {
         Token t = current();
 
         return switch (t.type()) {
-            case NUMBER -> new NumericExprNode(Double.parseDouble(advance().content()));
+            case NUMBER -> parseNumeric(advance());
+            case TRUE, FALSE -> parseBoolean(advance());
+            case STRING -> parseString(advance());
             case IDENTIFIER -> new VarExprNode(advance().content());
-            case TRUE, FALSE -> new BooleanExprNode(Boolean.parseBoolean(advance().content()));
-            case STRING -> parseString(advance().content());
             case LPAREN -> parseParenExpr();
             default -> {
                 String message = String.format("Unexpected token of type %s", t.type());
@@ -167,9 +167,20 @@ public class ParserImpl implements Parser {
         };
     }
 
-    private StringExprNode parseString(String s) {
-        s = s.substring(1, s.length() - 1);
-        return new StringExprNode(s);
+    private NumericExprNode parseNumeric(Token token) {
+        double value = Double.parseDouble(token.content());
+        return new NumericExprNode(value);
+    }
+
+    private BooleanExprNode parseBoolean(Token token) {
+        boolean value = Boolean.parseBoolean(token.content());
+        return new BooleanExprNode(value);
+    }
+
+    private StringExprNode parseString(Token token) {
+        String value = token.content();
+        value = value.substring(1, value.length() - 1);
+        return new StringExprNode(value);
     }
 
     // ParenExpr -> LPAREN Expr RPAREN
