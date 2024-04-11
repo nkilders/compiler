@@ -91,9 +91,9 @@ public class LexerImpl implements Lexer {
             LexerMachine bestMachine = getMachineWithMostSteps();
             String text = input.substring(pos, pos+step);
 
-            LOGGER.info("Best machine: {}", bestMachine);
-            LOGGER.info("Number of steps: {}", step);
-            LOGGER.info("Text: \"{}\"", text);
+            LOGGER.debug("Best machine: {}", bestMachine);
+            LOGGER.debug("Number of steps: {}", step);
+            LOGGER.debug("Text: \"{}\"", text);
 
             tokens.add(buildToken(bestMachine.getTokenType(), text, lineCol));
 
