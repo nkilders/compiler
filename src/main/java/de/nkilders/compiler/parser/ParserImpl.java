@@ -2,6 +2,7 @@ package de.nkilders.compiler.parser;
 
 import static de.nkilders.compiler.TokenType.DIVIDE;
 import static de.nkilders.compiler.TokenType.EOF;
+import static de.nkilders.compiler.TokenType.LBRACE;
 import static de.nkilders.compiler.TokenType.LINE_COMMENT;
 import static de.nkilders.compiler.TokenType.LPAREN;
 import static de.nkilders.compiler.TokenType.MINUS;
@@ -9,6 +10,7 @@ import static de.nkilders.compiler.TokenType.MULTIPLY;
 import static de.nkilders.compiler.TokenType.MULTI_LINE_COMMENT;
 import static de.nkilders.compiler.TokenType.NOT;
 import static de.nkilders.compiler.TokenType.PLUS;
+import static de.nkilders.compiler.TokenType.RBRACE;
 import static de.nkilders.compiler.TokenType.RPAREN;
 import static de.nkilders.compiler.TokenType.WHITESPACE;
 
@@ -19,6 +21,7 @@ import de.nkilders.compiler.CompilerException;
 import de.nkilders.compiler.Token;
 import de.nkilders.compiler.TokenType;
 import de.nkilders.compiler.parser.ast.BinaryExprNode;
+import de.nkilders.compiler.parser.ast.BlockStmtNode;
 import de.nkilders.compiler.parser.ast.BooleanExprNode;
 import de.nkilders.compiler.parser.ast.ExprNode;
 import de.nkilders.compiler.parser.ast.NumericExprNode;
@@ -91,9 +94,27 @@ public class ParserImpl implements Parser {
         advance();
     }
 
-    // Stmt -> Expr
+    // Stmt -> BlockStmt | Expr 
     private StmtNode parseStmt() {
-        return parseExpr();
+        return switch(current().type()) {
+            case LBRACE -> parseBlockStmt();
+            default -> parseExpr();
+        };
+    }
+
+    // BlockStmt -> LBRACE Stmt* RBRACE
+    private StmtNode parseBlockStmt() {
+        expect(LBRACE);
+
+        BlockStmtNode blockStmt = new BlockStmtNode();
+        while(current().type() != RBRACE) {
+            StmtNode stmt = parseStmt();
+            blockStmt.addStatement(stmt);
+        }
+
+        expect(RBRACE);
+
+        return blockStmt;
     }
 
     // Expr -> AddExpr
