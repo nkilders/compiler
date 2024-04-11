@@ -1,5 +1,6 @@
 package de.nkilders.compiler.parser.ast;
 
+import de.nkilders.compiler.interpreter.Environment;
 import de.nkilders.compiler.interpreter.values.RuntimeValue;
 
 public class VarExprNode extends ExprNode {
@@ -10,9 +11,8 @@ public class VarExprNode extends ExprNode {
     }
 
     @Override
-    public RuntimeValue<?> eval() {
-        // TODO: Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'eval'");
+    public RuntimeValue<?> eval(Environment env) {
+        return env.readVariable(varName);
     }
     
     public String getVarName() {

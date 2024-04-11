@@ -1,5 +1,6 @@
 package de.nkilders.compiler.parser.ast;
 
+import de.nkilders.compiler.interpreter.Environment;
 import de.nkilders.compiler.interpreter.values.StringValue;
 
 public class StringExprNode extends ExprNode {
@@ -10,7 +11,7 @@ public class StringExprNode extends ExprNode {
     }
 
     @Override
-    public StringValue eval() {
+    public StringValue eval(Environment env) {
         return new StringValue(value);
     }
 

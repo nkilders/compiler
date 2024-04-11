@@ -5,6 +5,7 @@ import static de.nkilders.compiler.TokenType.NOT;
 import static de.nkilders.compiler.TokenType.PLUS;
 
 import de.nkilders.compiler.TokenType;
+import de.nkilders.compiler.interpreter.Environment;
 import de.nkilders.compiler.interpreter.values.BooleanValue;
 import de.nkilders.compiler.interpreter.values.NumberValue;
 import de.nkilders.compiler.interpreter.values.RuntimeValue;
@@ -19,8 +20,8 @@ public class UnaryExprNode extends ExprNode {
     }
 
     @Override
-    public RuntimeValue<?> eval() {
-        RuntimeValue<?> expVal = expression.eval();
+    public RuntimeValue<?> eval(Environment env) {
+        RuntimeValue<?> expVal = expression.eval(env);
         
         if(expVal instanceof BooleanValue bool && operator == NOT) {
             boolean result = !bool.getValue();

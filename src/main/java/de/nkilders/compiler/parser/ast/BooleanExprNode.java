@@ -1,5 +1,6 @@
 package de.nkilders.compiler.parser.ast;
 
+import de.nkilders.compiler.interpreter.Environment;
 import de.nkilders.compiler.interpreter.values.BooleanValue;
 
 public class BooleanExprNode extends ExprNode {
@@ -10,7 +11,7 @@ public class BooleanExprNode extends ExprNode {
     }
 
     @Override
-    public BooleanValue eval() {
+    public BooleanValue eval(Environment env) {
         return new BooleanValue(value);
     }
 

@@ -7,6 +7,7 @@ import static de.nkilders.compiler.TokenType.NOT;
 import static de.nkilders.compiler.TokenType.PLUS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -33,53 +34,53 @@ class UnaryExprNodeTest {
     
     @Test
     void eval_bool_not() {
-        when(booleanExprNode1.eval()).thenReturn(new BooleanValue(true));
+        when(booleanExprNode1.eval(any())).thenReturn(new BooleanValue(true));
 
         UnaryExprNode node = new UnaryExprNode(NOT, booleanExprNode1);
 
-        RuntimeValue<?> result = node.eval();
+        RuntimeValue<?> result = node.eval(null);
 
         assertEquals(false, result.getValue());
     }
     
     @Test
     void eval_bool_err() {
-        when(booleanExprNode1.eval()).thenReturn(new BooleanValue(true));
+        when(booleanExprNode1.eval(any())).thenReturn(new BooleanValue(true));
 
         UnaryExprNode node = new UnaryExprNode(ELSE, booleanExprNode1);
 
-        assertThrows(UnsupportedOperationException.class, () -> node.eval());
+        assertThrows(UnsupportedOperationException.class, () -> node.eval(null));
     }
     
     @Test
     void eval_num_plus() {
-        when(numericExprNode1.eval()).thenReturn(new NumberValue(1));
+        when(numericExprNode1.eval(any())).thenReturn(new NumberValue(1));
 
         UnaryExprNode node = new UnaryExprNode(PLUS, numericExprNode1);
 
-        RuntimeValue<?> result = node.eval();
+        RuntimeValue<?> result = node.eval(null);
 
         assertEquals(1.0, result.getValue());
     }
     
     @Test
     void eval_num_minus() {
-        when(numericExprNode1.eval()).thenReturn(new NumberValue(1));
+        when(numericExprNode1.eval(any())).thenReturn(new NumberValue(1));
 
         UnaryExprNode node = new UnaryExprNode(MINUS, numericExprNode1);
 
-        RuntimeValue<?> result = node.eval();
+        RuntimeValue<?> result = node.eval(null);
 
         assertEquals(-1.0, result.getValue());
     }
     
     @Test
     void eval_num_err() {
-        when(numericExprNode1.eval()).thenReturn(new NumberValue(1));
+        when(numericExprNode1.eval(any())).thenReturn(new NumberValue(1));
 
         UnaryExprNode node = new UnaryExprNode(COMMA, numericExprNode1);
 
-        assertThrows(UnsupportedOperationException.class, () -> node.eval());
+        assertThrows(UnsupportedOperationException.class, () -> node.eval(null));
     }
 
 }

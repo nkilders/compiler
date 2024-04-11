@@ -1,6 +1,7 @@
 package de.nkilders.compiler.parser.ast;
 
 import de.nkilders.compiler.TokenType;
+import de.nkilders.compiler.interpreter.Environment;
 import de.nkilders.compiler.interpreter.values.NumberValue;
 import de.nkilders.compiler.interpreter.values.RuntimeValue;
 import de.nkilders.compiler.interpreter.values.StringValue;
@@ -17,9 +18,9 @@ public class BinaryExprNode extends ExprNode {
     }
 
     @Override
-    public RuntimeValue<?> eval() {
-        RuntimeValue<?> l = left.eval();
-        RuntimeValue<?> r = right.eval();
+    public RuntimeValue<?> eval(Environment env) {
+        RuntimeValue<?> l = left.eval(env);
+        RuntimeValue<?> r = right.eval(env);
 
         if(l instanceof NumberValue ll && r instanceof NumberValue rr) {
             return evalNumNum(ll, rr);

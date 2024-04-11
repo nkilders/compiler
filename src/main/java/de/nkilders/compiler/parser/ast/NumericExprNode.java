@@ -1,5 +1,6 @@
 package de.nkilders.compiler.parser.ast;
 
+import de.nkilders.compiler.interpreter.Environment;
 import de.nkilders.compiler.interpreter.values.NumberValue;
 
 public class NumericExprNode extends ExprNode {
@@ -10,7 +11,7 @@ public class NumericExprNode extends ExprNode {
     }
 
     @Override
-    public NumberValue eval() {
+    public NumberValue eval(Environment env) {
         return new NumberValue(value);
     }
 

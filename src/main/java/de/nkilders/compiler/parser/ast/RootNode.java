@@ -3,11 +3,15 @@ package de.nkilders.compiler.parser.ast;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.nkilders.compiler.interpreter.Environment;
+
 public class RootNode extends AstNode {
-    private List<StmtNode> statements;
+    private final List<StmtNode> statements;
+    private final Environment environment;
 
     public RootNode() {
         this.statements = new ArrayList<>();
+        this.environment = new Environment();
     }
 
     public void addStatement(StmtNode stmt) {
@@ -18,8 +22,12 @@ public class RootNode extends AstNode {
         return statements;
     }
 
+    public Environment getEnvironment() {
+        return environment;
+    }
+
     public void run() {
-        statements.stream().forEach(StmtNode::exec);
+        statements.stream().forEach(stmt -> stmt.exec(environment));
     }
 
     @Override
