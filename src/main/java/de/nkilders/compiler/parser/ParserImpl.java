@@ -1,8 +1,12 @@
 package de.nkilders.compiler.parser;
 
+import static de.nkilders.compiler.TokenType.ASSIGN;
+import static de.nkilders.compiler.TokenType.CONST;
 import static de.nkilders.compiler.TokenType.DIVIDE;
 import static de.nkilders.compiler.TokenType.EOF;
+import static de.nkilders.compiler.TokenType.IDENTIFIER;
 import static de.nkilders.compiler.TokenType.LBRACE;
+import static de.nkilders.compiler.TokenType.LET;
 import static de.nkilders.compiler.TokenType.LINE_COMMENT;
 import static de.nkilders.compiler.TokenType.LPAREN;
 import static de.nkilders.compiler.TokenType.MINUS;
@@ -23,6 +27,7 @@ import de.nkilders.compiler.TokenType;
 import de.nkilders.compiler.parser.ast.BinaryExprNode;
 import de.nkilders.compiler.parser.ast.BlockStmtNode;
 import de.nkilders.compiler.parser.ast.BooleanExprNode;
+import de.nkilders.compiler.parser.ast.DeclareStmtNode;
 import de.nkilders.compiler.parser.ast.ExprNode;
 import de.nkilders.compiler.parser.ast.NumericExprNode;
 import de.nkilders.compiler.parser.ast.RootNode;
@@ -81,9 +86,10 @@ public class ParserImpl implements Parser {
      * Otherwise throws an exception.
      * 
      * @param expectedType expected token type
+     * @return the current token
      * @throws CompilerException if the current token's type doesn't match {@code expectedType}
      */
-    private void expect(TokenType expectedType) throws CompilerException {
+    private Token expect(TokenType expectedType) throws CompilerException {
         TokenType actualType = current().type();
 
         if(actualType != expectedType) {
@@ -91,13 +97,14 @@ public class ParserImpl implements Parser {
             throw new CompilerException(message, current().pos());
         }
 
-        advance();
+        return advance();
     }
 
-    // Stmt -> BlockStmt | Expr 
+    // Stmt -> BlockStmt | DeclareStmt | Expr
     private StmtNode parseStmt() {
         return switch(current().type()) {
             case LBRACE -> parseBlockStmt();
+            case LET, CONST -> parseDeclareStmt();
             default -> parseExpr();
         };
     }
@@ -115,6 +122,30 @@ public class ParserImpl implements Parser {
         expect(RBRACE);
 
         return blockStmt;
+    }
+
+    // DeclareStmt -> ( LET | CONST ) IDENTIFIER ( ASSIGN Expr )?
+    private StmtNode parseDeclareStmt() {
+        if(current().type() != LET && current().type() != CONST) {
+            String message = String.format("Unexpected token of type %s", current().type());
+            throw new CompilerException(message, current().pos());
+        }
+
+        boolean isConst = advance().type() == CONST;
+        Token varName = expect(IDENTIFIER);
+        ExprNode expr = null;
+
+        if(current().type() == ASSIGN) {
+            expect(ASSIGN);
+            expr = parseExpr();
+        }
+
+        if(isConst && expr == null) {
+            String message = "Cannot declare a const variable without any value";
+            throw new CompilerException(message, varName.pos());
+        }
+        
+        return new DeclareStmtNode(varName.content(), isConst, expr);
     }
 
     // Expr -> AddExpr
