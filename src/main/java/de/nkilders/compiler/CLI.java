@@ -3,6 +3,9 @@ package de.nkilders.compiler;
 import java.util.List;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -13,25 +16,54 @@ import de.nkilders.compiler.parser.ParserImpl;
 import de.nkilders.compiler.parser.ast.RootNode;
 
 public class CLI {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CLI.class);
     
-    public static void main(String[] args) {
-        Lexer lexer = new LexerImpl();
-        Parser parser = new ParserImpl();
+    private final Lexer lexer;
+    private final Parser parser;
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private final Gson gson;
 
+    public CLI() {
+        lexer = new LexerImpl();
+        parser = new ParserImpl();
+
+        gson = new GsonBuilder().setPrettyPrinting().create();
+
+        start();
+    }
+
+    private void start() {
         try(Scanner scanner = new Scanner(System.in)) {
             String line;
             do {
                 System.out.print("\n> "); // NOSONAR
                 line = scanner.nextLine();
+                System.out.println(); // NOSONAR
 
-                List<Token> tokens = lexer.tokenize(line);
-                RootNode ast = parser.parse(tokens);
-
-                System.out.println(gson.toJson(ast)); // NOSONAR
-                ast.run();
+                process(line);
             } while (line != null);
-        }  
+        }
+    }
+
+    private void process(String input) {
+        List<Token> tokens = lexer.tokenize(input);
+        
+        String tokensStr = tokens.stream().map(Token::type).toList().toString();
+        LOGGER.debug("Tokens: {}", tokensStr);
+
+        RootNode ast = parser.parse(tokens);
+
+        String astStr = gson.toJson(ast);
+        LOGGER.debug("AST: {}", astStr);
+
+        try {
+            ast.run();
+        } catch(RuntimeException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        new CLI();
     }
 }
