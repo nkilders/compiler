@@ -26,7 +26,6 @@ import de.nkilders.compiler.Token;
 import de.nkilders.compiler.TokenType;
 import de.nkilders.compiler.parser.ast.BinaryExprNode;
 import de.nkilders.compiler.parser.ast.BlockStmtNode;
-import de.nkilders.compiler.parser.ast.BooleanExprNode;
 import de.nkilders.compiler.parser.ast.DeclareStmtNode;
 import de.nkilders.compiler.parser.ast.ExprNode;
 import de.nkilders.compiler.parser.ast.NumericExprNode;
@@ -208,7 +207,6 @@ public class ParserImpl implements Parser {
 
         return switch (t.type()) {
             case NUMBER -> parseNumeric(advance());
-            case TRUE, FALSE -> parseBoolean(advance());
             case STRING -> parseString(advance());
             case IDENTIFIER -> new VarExprNode(advance().content());
             case LPAREN -> parseParenExpr();
@@ -222,11 +220,6 @@ public class ParserImpl implements Parser {
     private NumericExprNode parseNumeric(Token token) {
         double value = Double.parseDouble(token.content());
         return new NumericExprNode(value);
-    }
-
-    private BooleanExprNode parseBoolean(Token token) {
-        boolean value = Boolean.parseBoolean(token.content());
-        return new BooleanExprNode(value);
     }
 
     private StringExprNode parseString(Token token) {

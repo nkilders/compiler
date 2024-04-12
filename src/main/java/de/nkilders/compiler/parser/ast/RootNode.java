@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.nkilders.compiler.interpreter.Environment;
+import de.nkilders.compiler.interpreter.values.BooleanValue;
+import de.nkilders.compiler.interpreter.values.NullValue;
 
 public class RootNode extends AstNode {
     private final List<StmtNode> statements;
@@ -12,10 +14,22 @@ public class RootNode extends AstNode {
     public RootNode() {
         this.statements = new ArrayList<>();
         this.environment = new Environment();
+
+        declareGlobalVariables();
     }
 
     public void addStatement(StmtNode stmt) {
         this.statements.add(stmt);
+    }
+
+    public void run() {
+        statements.stream().forEach(stmt -> stmt.exec(environment));
+    }
+
+    private void declareGlobalVariables() {
+        environment.declareVariable("true", true, new BooleanValue(true));
+        environment.declareVariable("false", true, new BooleanValue(false));
+        environment.declareVariable("null", true, new NullValue());
     }
 
     public List<StmtNode> getStatements() {
@@ -24,10 +38,6 @@ public class RootNode extends AstNode {
 
     public Environment getEnvironment() {
         return environment;
-    }
-
-    public void run() {
-        statements.stream().forEach(stmt -> stmt.exec(environment));
     }
 
     @Override
