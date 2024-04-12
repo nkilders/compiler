@@ -20,13 +20,10 @@ import de.nkilders.compiler.interpreter.values.StringValue;
 class BinaryExprNodeTest {
     
     @Mock
-    NumericExprNode numericExprNode1;
+    ExprNode exprNode1;
 
     @Mock
-    NumericExprNode numericExprNode2;
-
-    @Mock
-    StringExprNode stringExprNode1;
+    ExprNode exprNode2;
 
     @BeforeEach
     void beforeEach() {
@@ -35,10 +32,10 @@ class BinaryExprNodeTest {
 
     @Test
     void eval_evalNumNum_plus() {
-        when(numericExprNode1.eval(any())).thenReturn(new NumberValue(1));
-        when(numericExprNode2.eval(any())).thenReturn(new NumberValue(2));
+        when(exprNode1.eval(any())).thenReturn(new NumberValue(1));
+        when(exprNode2.eval(any())).thenReturn(new NumberValue(2));
 
-        BinaryExprNode node = new BinaryExprNode(numericExprNode1, numericExprNode2, PLUS);
+        BinaryExprNode node = new BinaryExprNode(exprNode1, exprNode2, PLUS);
 
         RuntimeValue<?> val = node.eval(null);
 
@@ -47,20 +44,20 @@ class BinaryExprNodeTest {
 
     @Test
     void eval_evalNumNum_err() {
-        when(numericExprNode1.eval(any())).thenReturn(new NumberValue(1));
-        when(numericExprNode2.eval(any())).thenReturn(new NumberValue(2));
+        when(exprNode1.eval(any())).thenReturn(new NumberValue(1));
+        when(exprNode2.eval(any())).thenReturn(new NumberValue(2));
 
-        BinaryExprNode node = new BinaryExprNode(numericExprNode1, numericExprNode2, NOT);
+        BinaryExprNode node = new BinaryExprNode(exprNode1, exprNode2, NOT);
 
         assertThrows(UnsupportedOperationException.class, () -> node.eval(null));
     }
 
     @Test
     void eval_evalStr_plus() {
-        when(numericExprNode1.eval(any())).thenReturn(new NumberValue(1));
-        when(stringExprNode1.eval(any())).thenReturn(new StringValue("Hello"));
+        when(exprNode1.eval(any())).thenReturn(new NumberValue(1));
+        when(exprNode2.eval(any())).thenReturn(new StringValue("Hello"));
 
-        BinaryExprNode node = new BinaryExprNode(numericExprNode1, stringExprNode1, PLUS);
+        BinaryExprNode node = new BinaryExprNode(exprNode1, exprNode2, PLUS);
 
         RuntimeValue<?> val = node.eval(null);
 
@@ -69,10 +66,10 @@ class BinaryExprNodeTest {
 
     @Test
     void eval_evalStr_err() {
-        when(numericExprNode1.eval(any())).thenReturn(new NumberValue(1));
-        when(stringExprNode1.eval(any())).thenReturn(new StringValue("Hello"));
+        when(exprNode1.eval(any())).thenReturn(new NumberValue(1));
+        when(exprNode2.eval(any())).thenReturn(new StringValue("Hello"));
 
-        BinaryExprNode node = new BinaryExprNode(numericExprNode1, stringExprNode1, IF);
+        BinaryExprNode node = new BinaryExprNode(exprNode1, exprNode2, IF);
         
         assertThrows(UnsupportedOperationException.class, () -> node.eval(null));
     }
