@@ -24,6 +24,7 @@ import java.util.List;
 import de.nkilders.compiler.CompilerException;
 import de.nkilders.compiler.Token;
 import de.nkilders.compiler.TokenType;
+import de.nkilders.compiler.parser.ast.AssignExprNode;
 import de.nkilders.compiler.parser.ast.BinaryExprNode;
 import de.nkilders.compiler.parser.ast.BlockStmtNode;
 import de.nkilders.compiler.parser.ast.DeclareStmtNode;
@@ -147,9 +148,30 @@ public class ParserImpl implements Parser {
         return new DeclareStmtNode(varName.content(), isConst, expr);
     }
 
-    // Expr -> AddExpr
+    // Expr -> AssignExpr
     private ExprNode parseExpr() {
-        return parseAddExpr();
+        return parseAssignExpr();
+    }
+
+    // AssignExpr -> AddExpr
+    // AssignExpr -> VarExpr ASSIGN AssignExpr
+    private ExprNode parseAssignExpr() {
+        ExprNode left = parseAddExpr();
+
+        if(current().type() == ASSIGN) {
+            if(!(left instanceof VarExprNode assignee)) {
+                String message = String.format("Unexpected token of type %s", current().type());
+                throw new CompilerException(message, current().pos());
+            }
+
+            advance();
+            
+            ExprNode expr = parseAssignExpr();
+
+            left = new AssignExprNode(assignee, expr);
+        }
+
+        return left;
     }
 
     // AddExpr -> MulExpr ( ( PLUS | MINUS ) MulExpr )*
