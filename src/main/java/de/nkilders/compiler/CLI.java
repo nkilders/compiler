@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import de.nkilders.compiler.interpreter.Environment;
 import de.nkilders.compiler.lexer.Lexer;
 import de.nkilders.compiler.lexer.LexerImpl;
 import de.nkilders.compiler.parser.Parser;
@@ -21,11 +22,15 @@ public class CLI {
     private final Lexer lexer;
     private final Parser parser;
 
+    private final Environment environment;
+
     private final Gson gson;
 
     public CLI() {
         lexer = new LexerImpl();
         parser = new ParserImpl();
+
+        environment = new Environment();
 
         gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -57,7 +62,7 @@ public class CLI {
         LOGGER.debug("AST: {}", astStr);
 
         try {
-            ast.run();
+            ast.run(environment);
         } catch(RuntimeException ex) {
             ex.printStackTrace();
         }

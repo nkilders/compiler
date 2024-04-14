@@ -3,6 +3,8 @@ package de.nkilders.compiler.interpreter;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.nkilders.compiler.interpreter.values.BooleanValue;
+import de.nkilders.compiler.interpreter.values.NullValue;
 import de.nkilders.compiler.interpreter.values.RuntimeValue;
 
 public class Environment {
@@ -16,6 +18,8 @@ public class Environment {
 
     public Environment() {
         this(null);
+
+        this.declareGlobalVariables();
     }
 
     /**
@@ -71,6 +75,12 @@ public class Environment {
 
         String message = String.format("Cannot read variable %s since it does not exist", name);
         throw new VarException(message);
+    }
+
+    private void declareGlobalVariables() {
+        declareVariable("true", true, new BooleanValue(true));
+        declareVariable("false", true, new BooleanValue(false));
+        declareVariable("null", true, new NullValue());
     }
 
     @Override
