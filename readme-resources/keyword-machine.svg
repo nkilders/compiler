@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="193px" preserveAspectRatio="none" style="width:314px;height:193px;background:#FFFFFF;" version="1.1" viewBox="0 0 314 193" width="314px" zoomAndPan="magnify"><defs/><g><ellipse cx="16" cy="33.5" fill="#222222" rx="10" ry="10" style="stroke:none;stroke-width:1.0;"/><g id="init"><rect fill="#F1F1F1" height="50" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="50" x="61" y="8.5"/><line style="stroke:#181818;stroke-width:0.5;" x1="61" x2="111" y1="34.7969" y2="34.7969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="20" x="76" y="26.4951">init</text></g><g id="1"><rect fill="#F1F1F1" height="50" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="50" x="159" y="8.5"/><line style="stroke:#181818;stroke-width:0.5;" x1="159" x2="209" y1="34.7969" y2="34.7969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="9" x="179.5" y="26.4951">1</text></g><g id="error"><rect fill="#F1F1F1" height="50" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="53" x="157.5" y="137"/><line style="stroke:#181818;stroke-width:0.5;" x1="157.5" x2="210.5" y1="163.2969" y2="163.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="33" x="167.5" y="154.9951">error</text></g><g id="2"><rect fill="#F1F1F1" height="52.5938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="50" x="257" y="7"/><line style="stroke:#181818;stroke-width:0.5;" x1="257" x2="307" y1="33.2969" y2="33.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="9" x="277.5" y="24.9951">2</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="8" x="262" y="51.292">✅</text></g><!--MD5=[847ec684daa39dd7b47d2a740511cfb5]
+link *start to init--><g id="link_*start_init"><path d="M26.12,33.5 C35.94,33.5 45.77,33.5 55.6,33.5 " fill="none" id="*start-to-init" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="60.74,33.5,51.74,29.5,55.74,33.5,51.74,37.5,60.74,33.5" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[3e5ceaa071d0ff76d4089083ba4016c4]
+link init to 1--><g id="link_init_1"><path d="M111.24,33.5 C124.15,33.5 139.98,33.5 153.57,33.5 " fill="none" id="init-to-1" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="158.85,33.5,149.85,29.5,153.85,33.5,149.85,37.5,158.85,33.5" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="11" x="129.5" y="26.5669">&gt;</text></g><!--MD5=[dec787b48378f8751dbb5b699d562325]
+link init to error--><g id="link_init_error"><path d="M103.5,58.53 C113.94,72.75 127.56,91.03 140,107 C146.64,115.53 154.01,124.68 160.79,132.99 " fill="none" id="init-to-error" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="164.06,136.99,161.472,127.4873,160.9,133.1151,155.2722,132.5432,164.06,136.99" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="34" x="141" y="103.0669">other</text></g><!--MD5=[0ba0d8a0fd0e641c23f69743a446dfe6]
+link 1 to 2--><g id="link_1_2"><path d="M209.24,33.5 C222.15,33.5 237.98,33.5 251.57,33.5 " fill="none" id="1-to-2" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="256.85,33.5,247.85,29.5,251.85,33.5,247.85,37.5,256.85,33.5" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="11" x="227.5" y="26.5669">=</text></g><!--MD5=[5eaf8812ce3e4470cc22381834a5a669]
+link 1 to error--><g id="link_1_error"><path d="M184,58.59 C184,79.43 184,109.62 184,131.82 " fill="none" id="1-to-error" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="184,137,188,128,184,132,180,128,184,137" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="34" x="185" y="103.0669">other</text></g><!--MD5=[bf7546f69a97313919496d75d39005e3]
+link 2 to error--><g id="link_2_error"><path d="M263.28,60.2 C253.01,74.16 239.96,91.65 228,107 C221.36,115.53 213.99,124.68 207.21,132.99 " fill="none" id="2-to-error" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="203.94,136.99,212.7278,132.5432,207.1,133.1151,206.528,127.4873,203.94,136.99" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="23" x="242" y="103.0669">any</text></g><!--MD5=[1ff7e3a7e37df2a36d956a6f0fda6927]
+link error to error--><g id="link_error_error"><path d="M210.55,151.4 C228.26,148.42 245.5,151.95 245.5,162 C245.5,171.03 231.58,174.8 215.91,173.31 " fill="none" id="error-to-error" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="210.55,172.6,218.9463,177.748,215.5066,173.2571,219.9976,169.8174,210.55,172.6" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="23" x="251.5" y="166.5669">any</text></g><!--MD5=[4bd93a4f01842644ff51c4b7f40e39bc]
+@startuml Keyword Machine
+
+[*] -r-> init
+
+init -r-> 1 : >
+init -d-> error : other
+
+1 -r-> 2 : =
+1 -d-> error : other
+
+2 -d-> error : any
+2 : ✅
+
+error - -> error : any
+
+@enduml
+
+PlantUML version 1.2022.7(Mon Aug 22 19:01:30 CEST 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>

@@ -1,0 +1,18 @@
+@startuml identifier-machine
+
+[*] -r-> init
+
+init -r-> first : /[A-Za-z_]/
+init -d-> error : other
+
+first -r-> more : /\\w/
+first -d-> error : other
+first : ✅
+
+more -r-> more : /\\w/
+more -d-> error : other
+more : ✅
+
+error --> error : any
+
+@enduml

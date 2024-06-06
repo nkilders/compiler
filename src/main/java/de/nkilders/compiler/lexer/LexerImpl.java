@@ -17,6 +17,7 @@ import static de.nkilders.compiler.TokenType.MINUS;
 import static de.nkilders.compiler.TokenType.MODULO;
 import static de.nkilders.compiler.TokenType.MULTIPLY;
 import static de.nkilders.compiler.TokenType.NOT;
+import static de.nkilders.compiler.TokenType.NOT_EQUALS;
 import static de.nkilders.compiler.TokenType.OR;
 import static de.nkilders.compiler.TokenType.PLUS;
 import static de.nkilders.compiler.TokenType.RBRACE;
@@ -121,6 +122,7 @@ public class LexerImpl implements Lexer {
             new KeywordMachine("/", DIVIDE),
             new KeywordMachine("%", MODULO),
             new KeywordMachine("==", EQUALS),
+            new KeywordMachine("!=", NOT_EQUALS),
             new KeywordMachine("=", ASSIGN),
             new KeywordMachine(">", GT),
             new KeywordMachine(">=", GTE),

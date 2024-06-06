@@ -1,0 +1,16 @@
+@startuml keyword-machine
+
+[*] -r-> init
+
+init -r-> 1 : >
+init -d-> error : other
+
+1 -r-> 2 : =
+1 -d-> error : other
+
+2 -d-> error : any
+2 : ✅
+
+error --> error : any
+
+@enduml

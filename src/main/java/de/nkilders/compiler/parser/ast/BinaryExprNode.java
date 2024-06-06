@@ -1,7 +1,17 @@
 package de.nkilders.compiler.parser.ast;
 
+import static de.nkilders.compiler.TokenType.EQUALS;
+import static de.nkilders.compiler.TokenType.GT;
+import static de.nkilders.compiler.TokenType.GTE;
+import static de.nkilders.compiler.TokenType.LT;
+import static de.nkilders.compiler.TokenType.LTE;
+import static de.nkilders.compiler.TokenType.NOT_EQUALS;
+
+import java.util.Objects;
+
 import de.nkilders.compiler.TokenType;
 import de.nkilders.compiler.interpreter.Environment;
+import de.nkilders.compiler.interpreter.values.BooleanValue;
 import de.nkilders.compiler.interpreter.values.NumberValue;
 import de.nkilders.compiler.interpreter.values.RuntimeValue;
 import de.nkilders.compiler.interpreter.values.StringValue;
@@ -22,6 +32,14 @@ public class BinaryExprNode extends ExprNode {
         RuntimeValue<?> l = left.eval(env);
         RuntimeValue<?> r = right.eval(env);
 
+        if(operator == GT || operator == GTE || operator == LT || operator == LTE) {
+            return evalGreaterLess(l, r);
+        }
+
+        if(operator == EQUALS || operator == NOT_EQUALS) {
+            return evalEquals(l, r);
+        }
+
         if(l instanceof NumberValue ll && r instanceof NumberValue rr) {
             return evalNumNum(ll, rr);
         }
@@ -31,6 +49,38 @@ public class BinaryExprNode extends ExprNode {
         }
 
         throw unsupportedOperation(l, r);
+    }
+
+    private BooleanValue evalGreaterLess(RuntimeValue<?> left, RuntimeValue<?> right) {
+        if(!(left instanceof NumberValue ll) || !(right instanceof NumberValue rr)) {
+            throw unsupportedOperation(left, right);
+        }
+
+        double l = ll.getValue();
+        double r = rr.getValue();
+
+        boolean result = switch(operator) {
+            case GT -> l > r;
+            case GTE -> l >= r;
+            case LT -> l < r;
+            case LTE -> l <= r;
+            default -> throw unsupportedOperation(left, right);
+        };
+
+        return new BooleanValue(result);
+    }
+
+    private BooleanValue evalEquals(RuntimeValue<?> left, RuntimeValue<?> right) {
+        Object l = left.getValue();
+        Object r = right.getValue();
+
+        boolean result = switch(operator) {
+            case EQUALS -> Objects.equals(l, r);
+            case NOT_EQUALS -> !Objects.equals(l, r);
+            default -> throw unsupportedOperation(left, right);
+        };
+
+        return new BooleanValue(result);
     }
 
     private NumberValue evalNumNum(NumberValue left, NumberValue right) {

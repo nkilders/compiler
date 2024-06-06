@@ -4,15 +4,21 @@ import static de.nkilders.compiler.TokenType.ASSIGN;
 import static de.nkilders.compiler.TokenType.CONST;
 import static de.nkilders.compiler.TokenType.DIVIDE;
 import static de.nkilders.compiler.TokenType.EOF;
+import static de.nkilders.compiler.TokenType.EQUALS;
+import static de.nkilders.compiler.TokenType.GT;
+import static de.nkilders.compiler.TokenType.GTE;
 import static de.nkilders.compiler.TokenType.IDENTIFIER;
 import static de.nkilders.compiler.TokenType.LBRACE;
 import static de.nkilders.compiler.TokenType.LET;
 import static de.nkilders.compiler.TokenType.LINE_COMMENT;
 import static de.nkilders.compiler.TokenType.LPAREN;
+import static de.nkilders.compiler.TokenType.LT;
+import static de.nkilders.compiler.TokenType.LTE;
 import static de.nkilders.compiler.TokenType.MINUS;
 import static de.nkilders.compiler.TokenType.MULTIPLY;
 import static de.nkilders.compiler.TokenType.MULTI_LINE_COMMENT;
 import static de.nkilders.compiler.TokenType.NOT;
+import static de.nkilders.compiler.TokenType.NOT_EQUALS;
 import static de.nkilders.compiler.TokenType.PLUS;
 import static de.nkilders.compiler.TokenType.RBRACE;
 import static de.nkilders.compiler.TokenType.RPAREN;
@@ -156,7 +162,7 @@ public class ParserImpl implements Parser {
     // AssignExpr -> AddExpr
     // AssignExpr -> VarExpr ASSIGN AssignExpr
     private ExprNode parseAssignExpr() {
-        ExprNode left = parseAddExpr();
+        ExprNode left = parseEqualsExpr();
 
         if(current().type() == ASSIGN) {
             if(!(left instanceof VarExprNode assignee)) {
@@ -172,6 +178,42 @@ public class ParserImpl implements Parser {
         }
 
         return left;
+    }
+
+    // EqualsExpr -> GreaterLessExpr ( (  ) GreaterLessExpr )?
+    private ExprNode parseEqualsExpr() {
+        ExprNode left = parseGreaterLessExpr();
+
+        if(isEqualsOperator(current())) {
+            Token operator = advance();
+            ExprNode right = parseGreaterLessExpr();
+
+            left = new BinaryExprNode(left, right, operator.type());
+        }
+
+        return left;
+    }
+
+    private boolean isEqualsOperator(Token token) {
+        return token.type() == EQUALS || token.type() == NOT_EQUALS;
+    } 
+
+    // GreaterLessExpr -> AddExpr ( ( GT | GTE | LT | LTE ) AddExpr )?
+    private ExprNode parseGreaterLessExpr() {
+        ExprNode left = parseAddExpr();
+
+        if(isGreaterLessOperator(current())) {
+            Token operator = advance();
+            ExprNode right = parseAddExpr();
+
+            left = new BinaryExprNode(left, right, operator.type());
+        }
+
+        return left;
+    }
+
+    private boolean isGreaterLessOperator(Token token) {
+        return token.type() == GT || token.type() == GTE || token.type() == LT || token.type() == LTE;
     }
 
     // AddExpr -> MulExpr ( ( PLUS | MINUS ) MulExpr )*

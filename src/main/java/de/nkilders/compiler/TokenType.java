@@ -14,6 +14,7 @@ public enum TokenType {
     DIVIDE,
     MODULO,
     EQUALS,
+    NOT_EQUALS,
     ASSIGN,
     GT,
     GTE,

@@ -1,0 +1,26 @@
+@startuml
+
+[*] -r-> init
+
+init -r-> start : /"/
+init -d-> error : other
+
+start -d-> escape : /\\/
+start -r-> content : /./
+start -r-> end : /"/
+start -d-> error : other
+
+content -r-> escape : /\\/
+content -r-> end : /"/
+content --> content : .
+content -d-> error : other
+
+escape -u-> content : /[\\"]/
+escape -d-> error : other
+
+end --> error : any
+end : ✅
+
+error --> error : any
+
+@enduml
