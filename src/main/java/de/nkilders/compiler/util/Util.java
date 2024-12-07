@@ -4,10 +4,9 @@ public class Util {
   public static LineCol calculateLineAndCol(String text, int pos) {
     text = text.substring(0, pos);
 
-    int line = text.chars()
+    int line = (int) text.chars()
         .filter(c -> c == '\n')
-        .map(_ -> 1)
-        .sum() + 1;
+        .count() + 1;
     int col = pos - text.lastIndexOf('\n');
 
     return new LineCol(line, col);
