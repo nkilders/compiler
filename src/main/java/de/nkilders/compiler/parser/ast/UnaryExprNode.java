@@ -11,52 +11,50 @@ import de.nkilders.compiler.interpreter.values.NumberValue;
 import de.nkilders.compiler.interpreter.values.RuntimeValue;
 
 public class UnaryExprNode extends ExprNode {
-    private TokenType operator;
-    private ExprNode expression;
+  private TokenType operator;
+  private ExprNode expression;
 
-    public UnaryExprNode(TokenType operator, ExprNode expression) {
-        this.operator = operator;
-        this.expression = expression;
+  public UnaryExprNode(TokenType operator, ExprNode expression) {
+    this.operator = operator;
+    this.expression = expression;
+  }
+
+  @Override
+  public RuntimeValue<?> eval(Environment env) {
+    RuntimeValue<?> expVal = expression.eval(env);
+
+    if (expVal instanceof BooleanValue bool && operator == NOT) {
+      boolean result = !bool.getValue();
+      return new BooleanValue(result);
     }
 
-    @Override
-    public RuntimeValue<?> eval(Environment env) {
-        RuntimeValue<?> expVal = expression.eval(env);
-        
-        if(expVal instanceof BooleanValue bool && operator == NOT) {
-            boolean result = !bool.getValue();
-            return new BooleanValue(result);
-        }
-
-        if(expVal instanceof NumberValue num && (operator == PLUS || operator == MINUS)) {
-            double result = num.getValue();
-            if(operator == MINUS) {
-                result *= -1;
-            }
-            return new NumberValue(result);
-        }
-
-        throw unsupportedOperation(expVal);
+    if (expVal instanceof NumberValue num && (operator == PLUS || operator == MINUS)) {
+      double result = num.getValue();
+      if (operator == MINUS) {
+        result *= -1;
+      }
+      return new NumberValue(result);
     }
 
-    private RuntimeException unsupportedOperation(RuntimeValue<?> val) {
-        String message = String.format("Operator %s is not defined for %s",
-            operator,
-            val.getClass().getSimpleName()
-        );
-        return new UnsupportedOperationException(message);
-    }
-    
-    public TokenType getOperator() {
-        return operator;
-    }
+    throw unsupportedOperation(expVal);
+  }
 
-    public ExprNode getExpression() {
-        return expression;
-    }
+  private RuntimeException unsupportedOperation(RuntimeValue<?> val) {
+    String message = String.format("Operator %s is not defined for %s", operator, val.getClass()
+        .getSimpleName());
+    return new UnsupportedOperationException(message);
+  }
 
-    @Override
-    public String toString() {
-        return "UnaryExprNode [operator=" + operator + ", expression=" + expression + "]";
-    }
+  public TokenType getOperator() {
+    return operator;
+  }
+
+  public ExprNode getExpression() {
+    return expression;
+  }
+
+  @Override
+  public String toString() {
+    return "UnaryExprNode [operator=" + operator + ", expression=" + expression + "]";
+  }
 }

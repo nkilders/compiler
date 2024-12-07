@@ -37,225 +37,224 @@ import de.nkilders.compiler.parser.ast.UnaryExprNode;
 import de.nkilders.compiler.parser.ast.VarExprNode;
 
 public class ParserImpl implements Parser {
-    private List<Token> tokens;
+  private List<Token> tokens;
 
-    @Override
-    public RootNode parse(List<Token> tokens) {
-        this.tokens = tokens;
-        cleanUpTokens();
+  @Override
+  public RootNode parse(List<Token> tokens) {
+    this.tokens = tokens;
+    cleanUpTokens();
 
-        RootNode root = new RootNode();
+    RootNode root = new RootNode();
 
-        while(current().type() != EOF) {
-            root.addStatement(parseStmt());
-        }
-
-        return root;
+    while (current().type() != EOF) {
+      root.addStatement(parseStmt());
     }
 
-    /**
-     * Removes tokens which aren't needed for parsing
-     */
-    private void cleanUpTokens() {
-        List<TokenType> ignoredTypes = List.of(
-            WHITESPACE,
-            LINE_COMMENT,
-            MULTI_LINE_COMMENT
-        );
-            
-        tokens = new ArrayList<>(tokens.stream().filter(t -> !ignoredTypes.contains(t.type())).toList());
+    return root;
+  }
+
+  /**
+   * Removes tokens which aren't needed for parsing
+   */
+  private void cleanUpTokens() {
+    List<TokenType> ignoredTypes = List.of(WHITESPACE, LINE_COMMENT, MULTI_LINE_COMMENT);
+
+    tokens = new ArrayList<>(tokens.stream()
+        .filter(t -> !ignoredTypes.contains(t.type()))
+        .toList());
+  }
+
+  /**
+   * @return the current token without removing it from the tokens list
+   */
+  private Token current() {
+    return tokens.get(0);
+  }
+
+  /**
+   * @return the current token and removes it from the tokens list
+   */
+  private Token advance() {
+    return tokens.remove(0);
+  }
+
+  /**
+   * Checks whether the current token's type matches {@code expectedType}. If yes,
+   * calls {@link ParserImpl#advance()} to remove current token from tokens list.
+   * Otherwise throws an exception.
+   * 
+   * @param expectedType expected token type
+   * @return the current token
+   * @throws CompilerException if the current token's type doesn't match
+   *                           {@code expectedType}
+   */
+  private Token expect(TokenType expectedType) throws CompilerException {
+    TokenType actualType = current().type();
+
+    if (actualType != expectedType) {
+      String message = String.format("Expected %s token but found %s", expectedType, actualType);
+      throw new CompilerException(message, current().pos());
     }
 
-    /**
-     * @return the current token without removing it from the tokens list
-     */
-    private Token current() {
-        return tokens.get(0);
+    return advance();
+  }
+
+  // Stmt -> BlockStmt | DeclareStmt | Expr
+  private StmtNode parseStmt() {
+    return switch (current().type()) {
+      case LBRACE -> parseBlockStmt();
+      case LET, CONST -> parseDeclareStmt();
+      default -> parseExpr();
+    };
+  }
+
+  // BlockStmt -> LBRACE Stmt* RBRACE
+  private StmtNode parseBlockStmt() {
+    expect(LBRACE);
+
+    BlockStmtNode blockStmt = new BlockStmtNode();
+    while (current().type() != RBRACE) {
+      StmtNode stmt = parseStmt();
+      blockStmt.addStatement(stmt);
     }
 
-    /**
-     * @return the current token and removes it from the tokens list
-     */
-    private Token advance() {
-        return tokens.remove(0);
+    expect(RBRACE);
+
+    return blockStmt;
+  }
+
+  // DeclareStmt -> ( LET | CONST ) IDENTIFIER ( ASSIGN Expr )?
+  private StmtNode parseDeclareStmt() {
+    if (current().type() != LET && current().type() != CONST) {
+      String message = String.format("Unexpected token of type %s", current().type());
+      throw new CompilerException(message, current().pos());
     }
 
-    /**
-     * Checks whether the current token's type matches {@code expectedType}.
-     * If yes, calls {@link ParserImpl#advance()} to remove current token from tokens list.
-     * Otherwise throws an exception.
-     * 
-     * @param expectedType expected token type
-     * @return the current token
-     * @throws CompilerException if the current token's type doesn't match {@code expectedType}
-     */
-    private Token expect(TokenType expectedType) throws CompilerException {
-        TokenType actualType = current().type();
+    boolean isConst = advance().type() == CONST;
+    Token varName = expect(IDENTIFIER);
+    ExprNode expr = null;
 
-        if(actualType != expectedType) {
-            String message = String.format("Expected %s token but found %s", expectedType, actualType);
-            throw new CompilerException(message, current().pos());
-        }
-
-        return advance();
+    if (current().type() == ASSIGN) {
+      expect(ASSIGN);
+      expr = parseExpr();
     }
 
-    // Stmt -> BlockStmt | DeclareStmt | Expr
-    private StmtNode parseStmt() {
-        return switch(current().type()) {
-            case LBRACE -> parseBlockStmt();
-            case LET, CONST -> parseDeclareStmt();
-            default -> parseExpr();
-        };
+    if (isConst && expr == null) {
+      String message = "Cannot declare a const variable without any value";
+      throw new CompilerException(message, varName.pos());
     }
 
-    // BlockStmt -> LBRACE Stmt* RBRACE
-    private StmtNode parseBlockStmt() {
-        expect(LBRACE);
+    return new DeclareStmtNode(varName.content(), isConst, expr);
+  }
 
-        BlockStmtNode blockStmt = new BlockStmtNode();
-        while(current().type() != RBRACE) {
-            StmtNode stmt = parseStmt();
-            blockStmt.addStatement(stmt);
-        }
+  // Expr -> AssignExpr
+  private ExprNode parseExpr() {
+    return parseAssignExpr();
+  }
 
-        expect(RBRACE);
+  // AssignExpr -> AddExpr
+  // AssignExpr -> VarExpr ASSIGN AssignExpr
+  private ExprNode parseAssignExpr() {
+    ExprNode left = parseAddExpr();
 
-        return blockStmt;
+    if (current().type() == ASSIGN) {
+      if (!(left instanceof VarExprNode assignee)) {
+        String message = String.format("Unexpected token of type %s", current().type());
+        throw new CompilerException(message, current().pos());
+      }
+
+      advance();
+
+      ExprNode expr = parseAssignExpr();
+
+      left = new AssignExprNode(assignee, expr);
     }
 
-    // DeclareStmt -> ( LET | CONST ) IDENTIFIER ( ASSIGN Expr )?
-    private StmtNode parseDeclareStmt() {
-        if(current().type() != LET && current().type() != CONST) {
-            String message = String.format("Unexpected token of type %s", current().type());
-            throw new CompilerException(message, current().pos());
-        }
+    return left;
+  }
 
-        boolean isConst = advance().type() == CONST;
-        Token varName = expect(IDENTIFIER);
-        ExprNode expr = null;
+  // AddExpr -> MulExpr ( ( PLUS | MINUS ) MulExpr )*
+  private ExprNode parseAddExpr() {
+    ExprNode left = parseMulExpr();
 
-        if(current().type() == ASSIGN) {
-            expect(ASSIGN);
-            expr = parseExpr();
-        }
+    while (isAddOperator(current())) {
+      Token operator = advance();
+      ExprNode right = parseMulExpr();
 
-        if(isConst && expr == null) {
-            String message = "Cannot declare a const variable without any value";
-            throw new CompilerException(message, varName.pos());
-        }
-        
-        return new DeclareStmtNode(varName.content(), isConst, expr);
+      left = new BinaryExprNode(left, right, operator.type());
     }
 
-    // Expr -> AssignExpr
-    private ExprNode parseExpr() {
-        return parseAssignExpr();
+    return left;
+  }
+
+  private boolean isAddOperator(Token token) {
+    return token.type() == PLUS || token.type() == MINUS;
+  }
+
+  // MulExpr -> UnaryExpr ( ( MULTIPLY | DIVIDE ) UnaryExpr )*
+  private ExprNode parseMulExpr() {
+    ExprNode left = parseUnaryExpr();
+
+    while (isMulOperator(current())) {
+      Token operator = advance();
+      ExprNode right = parseUnaryExpr();
+
+      left = new BinaryExprNode(left, right, operator.type());
     }
 
-    // AssignExpr -> AddExpr
-    // AssignExpr -> VarExpr ASSIGN AssignExpr
-    private ExprNode parseAssignExpr() {
-        ExprNode left = parseAddExpr();
+    return left;
+  }
 
-        if(current().type() == ASSIGN) {
-            if(!(left instanceof VarExprNode assignee)) {
-                String message = String.format("Unexpected token of type %s", current().type());
-                throw new CompilerException(message, current().pos());
-            }
+  private boolean isMulOperator(Token token) {
+    return token.type() == MULTIPLY || token.type() == DIVIDE;
+  }
 
-            advance();
-            
-            ExprNode expr = parseAssignExpr();
-
-            left = new AssignExprNode(assignee, expr);
-        }
-
-        return left;
+  // UnaryExpr -> ( ( PLUS | MINUS | NOT ) UnaryExpr ) | PrimaryExpr
+  private ExprNode parseUnaryExpr() {
+    if (isUnaryOperator(current())) {
+      return new UnaryExprNode(advance().type(), parseUnaryExpr());
     }
 
-    // AddExpr -> MulExpr ( ( PLUS | MINUS ) MulExpr )*
-    private ExprNode parseAddExpr() {
-        ExprNode left = parseMulExpr();
+    return parsePrimaryExpr();
+  }
 
-        while(isAddOperator(current())) {
-            Token operator = advance();
-            ExprNode right = parseMulExpr();
+  private boolean isUnaryOperator(Token token) {
+    return token.type() == PLUS || token.type() == MINUS || token.type() == NOT;
+  }
 
-            left = new BinaryExprNode(left, right, operator.type());
-        }
+  // PrimaryExpr -> NUMBER | TRUE | FALSE | STRING | IDENTIFIER | ParenExpr
+  private ExprNode parsePrimaryExpr() throws CompilerException {
+    Token t = current();
 
-        return left;
-    }
+    return switch (t.type()) {
+      case NUMBER -> parseNumeric(advance());
+      case STRING -> parseString(advance());
+      case IDENTIFIER -> new VarExprNode(advance().content());
+      case LPAREN -> parseParenExpr();
+      default -> {
+        String message = String.format("Unexpected token of type %s", t.type());
+        throw new CompilerException(message, t.pos());
+      }
+    };
+  }
 
-    private boolean isAddOperator(Token token) {
-        return token.type() == PLUS || token.type() == MINUS;
-    }
-    
-    // MulExpr -> UnaryExpr ( ( MULTIPLY | DIVIDE ) UnaryExpr )*
-    private ExprNode parseMulExpr() {
-        ExprNode left = parseUnaryExpr();
+  private NumericExprNode parseNumeric(Token token) {
+    double value = Double.parseDouble(token.content());
+    return new NumericExprNode(value);
+  }
 
-        while(isMulOperator(current())) {
-            Token operator = advance();
-            ExprNode right = parseUnaryExpr();
+  private StringExprNode parseString(Token token) {
+    String value = token.content();
+    value = value.substring(1, value.length() - 1);
+    return new StringExprNode(value);
+  }
 
-            left = new BinaryExprNode(left, right, operator.type());
-        }
+  // ParenExpr -> LPAREN Expr RPAREN
+  private ExprNode parseParenExpr() {
+    expect(LPAREN);
+    ExprNode expr = parseExpr();
+    expect(RPAREN);
 
-        return left;
-    }
-
-    private boolean isMulOperator(Token token) {
-        return token.type() == MULTIPLY || token.type() == DIVIDE;
-    }
-
-    // UnaryExpr -> ( ( PLUS | MINUS | NOT ) UnaryExpr ) | PrimaryExpr
-    private ExprNode parseUnaryExpr() {
-        if(isUnaryOperator(current())) {
-            return new UnaryExprNode(advance().type(), parseUnaryExpr());
-        }
-
-        return parsePrimaryExpr();
-    }
-
-    private boolean isUnaryOperator(Token token) {
-        return token.type() == PLUS || token.type() == MINUS || token.type() == NOT;
-    }
-    
-    // PrimaryExpr -> NUMBER | TRUE | FALSE | STRING | IDENTIFIER | ParenExpr
-    private ExprNode parsePrimaryExpr() throws CompilerException {
-        Token t = current();
-
-        return switch (t.type()) {
-            case NUMBER -> parseNumeric(advance());
-            case STRING -> parseString(advance());
-            case IDENTIFIER -> new VarExprNode(advance().content());
-            case LPAREN -> parseParenExpr();
-            default -> {
-                String message = String.format("Unexpected token of type %s", t.type());
-                throw new CompilerException(message, t.pos());
-            }
-        };
-    }
-
-    private NumericExprNode parseNumeric(Token token) {
-        double value = Double.parseDouble(token.content());
-        return new NumericExprNode(value);
-    }
-
-    private StringExprNode parseString(Token token) {
-        String value = token.content();
-        value = value.substring(1, value.length() - 1);
-        return new StringExprNode(value);
-    }
-
-    // ParenExpr -> LPAREN Expr RPAREN
-    private ExprNode parseParenExpr() {
-        expect(LPAREN);
-        ExprNode expr = parseExpr();
-        expect(RPAREN);
-
-        return expr;
-    }
+    return expr;
+  }
 }

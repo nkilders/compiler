@@ -5,32 +5,32 @@ import de.nkilders.compiler.lexer.LexerMachine;
 
 public class NumberMachine extends LexerMachine {
 
-    @Override
-    protected void initStatesAndTransitions() {
-        var init = initialState();
-        var preDot = state("pre dot", true);
-        var dot = state("dot");
-        var postDot = state("post dot", true);
-        var err = errorState();
+  @Override
+  protected void initStatesAndTransitions() {
+    var init = initialState();
+    var preDot = state("pre dot", true);
+    var dot = state("dot");
+    var postDot = state("post dot", true);
+    var err = errorState();
 
-        init.addTransition(preDot, "\\d")
-            .addTransition(dot, "\\.")
-            .setFallbackTransitionState(err);
+    init.addTransition(preDot, "\\d")
+        .addTransition(dot, "\\.")
+        .setFallbackTransitionState(err);
 
-        preDot.addTransition(preDot, "\\d")
-              .addTransition(dot, "\\.")
-              .setFallbackTransitionState(err);
+    preDot.addTransition(preDot, "\\d")
+        .addTransition(dot, "\\.")
+        .setFallbackTransitionState(err);
 
-        dot.addTransition(postDot, "\\d")
-           .setFallbackTransitionState(err);
+    dot.addTransition(postDot, "\\d")
+        .setFallbackTransitionState(err);
 
-        postDot.addTransition(postDot, "\\d")
-               .setFallbackTransitionState(err);
-    }
+    postDot.addTransition(postDot, "\\d")
+        .setFallbackTransitionState(err);
+  }
 
-    @Override
-    public TokenType getTokenType() {
-        return TokenType.NUMBER;
-    }
-    
+  @Override
+  public TokenType getTokenType() {
+    return TokenType.NUMBER;
+  }
+
 }

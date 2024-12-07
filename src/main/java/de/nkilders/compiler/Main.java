@@ -13,21 +13,23 @@ import de.nkilders.compiler.lexer.Lexer;
 import de.nkilders.compiler.lexer.LexerImpl;
 
 public class Main {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
-    public static void main(String[] args) throws IOException {
-        Lexer lexer = new LexerImpl();
-        String input = loadScript("test");
+  public static void main(String[] args) throws IOException {
+    Lexer lexer = new LexerImpl();
+    String input = loadScript("test");
 
-        List<Token> tokens = lexer.tokenize(input);
-        tokens.forEach(t -> LOGGER.info(t.toString()));
-    }
+    List<Token> tokens = lexer.tokenize(input);
+    tokens.forEach(t -> LOGGER.info(t.toString()));
+  }
 
-    private static String loadScript(String filename) throws IOException {
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        String pathStr = classloader.getResource("scripts/" + filename).getPath();
-        Path path = Paths.get(pathStr);
+  private static String loadScript(String filename) throws IOException {
+    ClassLoader classloader = Thread.currentThread()
+        .getContextClassLoader();
+    String pathStr = classloader.getResource("scripts/" + filename)
+        .getPath();
+    Path path = Paths.get(pathStr);
 
-        return Files.readString(path);
-    }
+    return Files.readString(path);
+  }
 }

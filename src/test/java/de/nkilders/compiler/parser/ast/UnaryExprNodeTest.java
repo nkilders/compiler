@@ -23,67 +23,67 @@ import de.nkilders.compiler.interpreter.values.RuntimeValue;
 
 class UnaryExprNodeTest {
 
-    @Mock
-    ExprNode exprNode1;
+  @Mock
+  ExprNode exprNode1;
 
-    @Mock
-    ExprNode exprNode2;
+  @Mock
+  ExprNode exprNode2;
 
-    @BeforeEach
-    void beforeEach() {
-        MockitoAnnotations.openMocks(this);
-    }
-    
-    @Test
-    void eval_bool_not() {
-        when(exprNode1.eval(any())).thenReturn(new BooleanValue(true));
+  @BeforeEach
+  void beforeEach() {
+    MockitoAnnotations.openMocks(this);
+  }
 
-        UnaryExprNode node = new UnaryExprNode(NOT, exprNode1);
+  @Test
+  void eval_bool_not() {
+    when(exprNode1.eval(any())).thenReturn(new BooleanValue(true));
 
-        RuntimeValue<?> result = node.eval(null);
+    UnaryExprNode node = new UnaryExprNode(NOT, exprNode1);
 
-        assertInstanceOf(Boolean.class, result.getValue());
-        assertFalse((boolean) result.getValue());
-    }
-    
-    @Test
-    void eval_bool_err() {
-        when(exprNode1.eval(any())).thenReturn(new BooleanValue(true));
+    RuntimeValue<?> result = node.eval(null);
 
-        UnaryExprNode node = new UnaryExprNode(ELSE, exprNode1);
+    assertInstanceOf(Boolean.class, result.getValue());
+    assertFalse((boolean) result.getValue());
+  }
 
-        assertThrows(UnsupportedOperationException.class, () -> node.eval(null));
-    }
-    
-    @Test
-    void eval_num_plus() {
-        when(exprNode2.eval(any())).thenReturn(new NumberValue(1));
+  @Test
+  void eval_bool_err() {
+    when(exprNode1.eval(any())).thenReturn(new BooleanValue(true));
 
-        UnaryExprNode node = new UnaryExprNode(PLUS, exprNode2);
+    UnaryExprNode node = new UnaryExprNode(ELSE, exprNode1);
 
-        RuntimeValue<?> result = node.eval(null);
+    assertThrows(UnsupportedOperationException.class, () -> node.eval(null));
+  }
 
-        assertEquals(1.0, result.getValue());
-    }
-    
-    @Test
-    void eval_num_minus() {
-        when(exprNode2.eval(any())).thenReturn(new NumberValue(1));
+  @Test
+  void eval_num_plus() {
+    when(exprNode2.eval(any())).thenReturn(new NumberValue(1));
 
-        UnaryExprNode node = new UnaryExprNode(MINUS, exprNode2);
+    UnaryExprNode node = new UnaryExprNode(PLUS, exprNode2);
 
-        RuntimeValue<?> result = node.eval(null);
+    RuntimeValue<?> result = node.eval(null);
 
-        assertEquals(-1.0, result.getValue());
-    }
-    
-    @Test
-    void eval_num_err() {
-        when(exprNode2.eval(any())).thenReturn(new NumberValue(1));
+    assertEquals(1.0, result.getValue());
+  }
 
-        UnaryExprNode node = new UnaryExprNode(COMMA, exprNode2);
+  @Test
+  void eval_num_minus() {
+    when(exprNode2.eval(any())).thenReturn(new NumberValue(1));
 
-        assertThrows(UnsupportedOperationException.class, () -> node.eval(null));
-    }
+    UnaryExprNode node = new UnaryExprNode(MINUS, exprNode2);
+
+    RuntimeValue<?> result = node.eval(null);
+
+    assertEquals(-1.0, result.getValue());
+  }
+
+  @Test
+  void eval_num_err() {
+    when(exprNode2.eval(any())).thenReturn(new NumberValue(1));
+
+    UnaryExprNode node = new UnaryExprNode(COMMA, exprNode2);
+
+    assertThrows(UnsupportedOperationException.class, () -> node.eval(null));
+  }
 
 }

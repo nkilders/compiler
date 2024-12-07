@@ -4,19 +4,19 @@ import de.nkilders.compiler.interpreter.Environment;
 import de.nkilders.compiler.interpreter.values.StringValue;
 
 public class StringExprNode extends ExprNode {
-    private String value;
+  private String value;
 
-    public StringExprNode(String value) {
-        this.value = value;
-    }
+  public StringExprNode(String value) {
+    this.value = value;
+  }
 
-    @Override
-    public StringValue eval(Environment env) {
-        return new StringValue(value);
-    }
+  @Override
+  public StringValue eval(Environment env) {
+    return new StringValue(value);
+  }
 
-    @Override
-    public String toString() {
-        return "StringExprNode [value=" + value + "]";
-    }
+  @Override
+  public String toString() {
+    return "StringExprNode [value=" + value + "]";
+  }
 }

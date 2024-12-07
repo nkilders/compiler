@@ -17,58 +17,62 @@ import de.nkilders.compiler.parser.ParserImpl;
 import de.nkilders.compiler.parser.ast.RootNode;
 
 public class CLI {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CLI.class);
-    
-    private final Lexer lexer;
-    private final Parser parser;
+  private static final Logger LOGGER = LoggerFactory.getLogger(CLI.class);
 
-    private final Environment environment;
+  private final Lexer lexer;
+  private final Parser parser;
 
-    private final Gson gson;
+  private final Environment environment;
 
-    public CLI() {
-        lexer = new LexerImpl();
-        parser = new ParserImpl();
+  private final Gson gson;
 
-        environment = new Environment();
+  public CLI() {
+    lexer = new LexerImpl();
+    parser = new ParserImpl();
 
-        gson = new GsonBuilder().setPrettyPrinting().create();
+    environment = new Environment();
 
-        start();
+    gson = new GsonBuilder().setPrettyPrinting()
+        .create();
+
+    start();
+  }
+
+  private void start() {
+    try (Scanner scanner = new Scanner(System.in)) {
+      String line;
+      do {
+        System.out.print("\n> "); // NOSONAR
+        line = scanner.nextLine();
+        System.out.println(); // NOSONAR
+
+        process(line);
+      } while (line != null);
     }
+  }
 
-    private void start() {
-        try(Scanner scanner = new Scanner(System.in)) {
-            String line;
-            do {
-                System.out.print("\n> "); // NOSONAR
-                line = scanner.nextLine();
-                System.out.println(); // NOSONAR
+  private void process(String input) {
+    List<Token> tokens = lexer.tokenize(input);
 
-                process(line);
-            } while (line != null);
-        }
+    String tokensStr = tokens.stream()
+        .map(Token::type)
+        .toList()
+        .toString();
+    LOGGER.debug("Tokens: {}", tokensStr);
+
+    RootNode ast = parser.parse(tokens);
+
+    String astStr = gson.toJson(ast);
+    LOGGER.debug("AST: {}", astStr);
+
+    try {
+      ast.run(environment);
+    } catch (RuntimeException ex) {
+      LOGGER.error(ex.getMessage(), ex);
     }
+  }
 
-    private void process(String input) {
-        List<Token> tokens = lexer.tokenize(input);
-        
-        String tokensStr = tokens.stream().map(Token::type).toList().toString();
-        LOGGER.debug("Tokens: {}", tokensStr);
-
-        RootNode ast = parser.parse(tokens);
-
-        String astStr = gson.toJson(ast);
-        LOGGER.debug("AST: {}", astStr);
-
-        try {
-            ast.run(environment);
-        } catch(RuntimeException ex) {
-            LOGGER.error(ex.getMessage(), ex);
-        }
-    }
-
-    public static void main(String[] args) {
-        new CLI();
-    }
+  public static void main(String[] args) {
+    new CLI();
+  }
 }

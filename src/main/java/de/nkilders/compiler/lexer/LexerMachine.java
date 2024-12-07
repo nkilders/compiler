@@ -5,13 +5,13 @@ import de.nkilders.compiler.util.StateMachine;
 
 public abstract class LexerMachine extends StateMachine {
 
-    protected LexerMachine() {
-        super();
-    }
+  protected LexerMachine() {
+    super();
+  }
 
-    protected LexerMachine(boolean initialize) {
-        super(initialize);
-    }
+  protected LexerMachine(boolean initialize) {
+    super(initialize);
+  }
 
-    public abstract TokenType getTokenType();
+  public abstract TokenType getTokenType();
 }

@@ -5,5 +5,5 @@ import java.util.List;
 import de.nkilders.compiler.Token;
 
 public interface Lexer {
-    List<Token> tokenize(String input);
+  List<Token> tokenize(String input);
 }

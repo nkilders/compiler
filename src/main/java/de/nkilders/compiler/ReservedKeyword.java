@@ -11,26 +11,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class ReservedKeyword {
-    private static final Map<String, TokenType> KEYWORDS;
+  private static final Map<String, TokenType> KEYWORDS;
 
-    static {
-        KEYWORDS = new HashMap<>();
-        
-        keyword("function", FUNCTION);
-        keyword("let", LET);
-        keyword("const", CONST);
-        keyword("if", IF);
-        keyword("else", ELSE);
-        keyword("while", WHILE);
-    }
+  static {
+    KEYWORDS = new HashMap<>();
 
-    private ReservedKeyword() {}
+    keyword("function", FUNCTION);
+    keyword("let", LET);
+    keyword("const", CONST);
+    keyword("if", IF);
+    keyword("else", ELSE);
+    keyword("while", WHILE);
+  }
 
-    private static void keyword(String key, TokenType type) {
-        KEYWORDS.put(key, type);
-    }
+  private ReservedKeyword() {
+  }
 
-    public static TokenType get(String text) {
-        return KEYWORDS.get(text);
-    }
+  private static void keyword(String key, TokenType type) {
+    KEYWORDS.put(key, type);
+  }
+
+  public static TokenType get(String text) {
+    return KEYWORDS.get(text);
+  }
 }

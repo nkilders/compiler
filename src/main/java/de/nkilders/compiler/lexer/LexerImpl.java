@@ -47,128 +47,131 @@ import de.nkilders.compiler.util.Util;
 import de.nkilders.compiler.util.Util.LineCol;
 
 public class LexerImpl implements Lexer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LexerImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(LexerImpl.class);
 
-    private List<LexerMachine> machines;
+  private List<LexerMachine> machines;
 
-    public LexerImpl() {
-        this.machines = new ArrayList<>();
+  public LexerImpl() {
+    this.machines = new ArrayList<>();
 
-        this.createMachines();
-    }
+    this.createMachines();
+  }
 
-    @Override
-    public List<Token> tokenize(String input) {
-        List<Token> tokens = new ArrayList<>();
+  @Override
+  public List<Token> tokenize(String input) {
+    List<Token> tokens = new ArrayList<>();
 
-        char[] chars = input.toCharArray();
+    char[] chars = input.toCharArray();
 
-        int pos = 0;
-        
-        while(pos < input.length()) {
-            resetMachines();
+    int pos = 0;
 
-            int step = 0;
+    while (pos < input.length()) {
+      resetMachines();
 
-            do {
-                char currentChar = chars[pos + step];
-                machines.forEach(m -> m.step(currentChar));
+      int step = 0;
 
-                if(!anyMachineActive()) {
-                    break;
-                }
+      do {
+        char currentChar = chars[pos + step];
+        machines.forEach(m -> m.step(currentChar));
 
-                step++;
-            } while((pos+step) < input.length());
-
-            LineCol lineCol = Util.calculateLineAndCol(input, pos);
-
-            if(step == 0) {
-                String msg = String.format("Unable to process character \"%s\"", input.charAt(pos));
-                throw new CompilerException(msg, lineCol);
-            }
-
-            LexerMachine bestMachine = getMachineWithMostSteps();
-            String text = input.substring(pos, pos+step);
-
-            LOGGER.debug("Best machine: {}", bestMachine);
-            LOGGER.debug("Number of steps: {}", step);
-            LOGGER.debug("Text: \"{}\"", text);
-
-            tokens.add(buildToken(bestMachine.getTokenType(), text, lineCol));
-
-            pos += step;
+        if (!anyMachineActive()) {
+          break;
         }
 
-        LineCol lineCol = Util.calculateLineAndCol(input, pos);
-        tokens.add(buildToken(EOF, "", lineCol));
+        step++;
+      } while ((pos + step) < input.length());
 
-        return tokens;
+      LineCol lineCol = Util.calculateLineAndCol(input, pos);
+
+      if (step == 0) {
+        String msg = String.format("Unable to process character \"%s\"", input.charAt(pos));
+        throw new CompilerException(msg, lineCol);
+      }
+
+      LexerMachine bestMachine = getMachineWithMostSteps();
+      String text = input.substring(pos, pos + step);
+
+      LOGGER.debug("Best machine: {}", bestMachine);
+      LOGGER.debug("Number of steps: {}", step);
+      LOGGER.debug("Text: \"{}\"", text);
+
+      tokens.add(buildToken(bestMachine.getTokenType(), text, lineCol));
+
+      pos += step;
     }
 
-    private void createMachines() {
-        this.machines = List.of(
-            // Static
-            new KeywordMachine("(", LPAREN),
-            new KeywordMachine(")", RPAREN),
-            new KeywordMachine("{", LBRACE),
-            new KeywordMachine("}", RBRACE),
-            new KeywordMachine("[", LBRACKET),
-            new KeywordMachine("]", RBRACKET),
-            new KeywordMachine("+", PLUS),
-            new KeywordMachine("-", MINUS),
-            new KeywordMachine("*", MULTIPLY),
-            new KeywordMachine("/", DIVIDE),
-            new KeywordMachine("%", MODULO),
-            new KeywordMachine("==", EQUALS),
-            new KeywordMachine("=", ASSIGN),
-            new KeywordMachine(">", GT),
-            new KeywordMachine(">=", GTE),
-            new KeywordMachine("<", LT),
-            new KeywordMachine("<=", LTE),
-            new KeywordMachine(";", SEMICOLON),
-            new KeywordMachine(",", COMMA),
-            new KeywordMachine("&&", AND),
-            new KeywordMachine("||", OR),
-            new KeywordMachine("!", NOT),
-        
-            // Dynamic
-            new LineCommentMachine(),
-            new MultiLineCommentMachine(),
-            new WhitespaceMachine(),
-            new StringMachine(),
-            new IdentifierMachine(),
-            new NumberMachine()
-        );
+    LineCol lineCol = Util.calculateLineAndCol(input, pos);
+    tokens.add(buildToken(EOF, "", lineCol));
+
+    return tokens;
+  }
+
+  private void createMachines() {
+    // @formatter:off
+    this.machines = List.of(
+        // Static
+        new KeywordMachine("(", LPAREN),
+        new KeywordMachine(")", RPAREN),
+        new KeywordMachine("{", LBRACE),
+        new KeywordMachine("}", RBRACE),
+        new KeywordMachine("[", LBRACKET),
+        new KeywordMachine("]", RBRACKET),
+        new KeywordMachine("+", PLUS),
+        new KeywordMachine("-", MINUS),
+        new KeywordMachine("*", MULTIPLY),
+        new KeywordMachine("/", DIVIDE),
+        new KeywordMachine("%", MODULO),
+        new KeywordMachine("==", EQUALS),
+        new KeywordMachine("=", ASSIGN),
+        new KeywordMachine(">", GT),
+        new KeywordMachine(">=", GTE),
+        new KeywordMachine("<", LT),
+        new KeywordMachine("<=", LTE),
+        new KeywordMachine(";", SEMICOLON),
+        new KeywordMachine(",", COMMA),
+        new KeywordMachine("&&", AND),
+        new KeywordMachine("||", OR),
+        new KeywordMachine("!", NOT),
+
+        // Dynamic
+        new LineCommentMachine(),
+        new MultiLineCommentMachine(),
+        new WhitespaceMachine(),
+        new StringMachine(),
+        new IdentifierMachine(),
+        new NumberMachine()
+    );
+    // @formatter:on
+  }
+
+  private Token buildToken(TokenType type, String content, LineCol lineCol) {
+    if (type == TokenType.IDENTIFIER) {
+      TokenType reservedKeywordType = ReservedKeyword.get(content);
+
+      if (reservedKeywordType != null) {
+        type = reservedKeywordType;
+      }
     }
 
-    private Token buildToken(TokenType type, String content, LineCol lineCol) {
-        if(type == TokenType.IDENTIFIER) {
-            TokenType reservedKeywordType = ReservedKeyword.get(content);
+    return new Token(type, content, lineCol);
+  }
 
-            if(reservedKeywordType != null) {
-                type = reservedKeywordType;
-            }
-        }
+  private boolean anyMachineActive() {
+    return this.machines.stream()
+        .anyMatch(m -> !m.isInErrorState());
+  }
 
-        return new Token(type, content, lineCol);
-    }
+  private LexerMachine getMachineWithMostSteps() {
+    return machines.stream()
+        // When the last character of a file has been read, not all machines have to
+        // be in error state. For that case we need to filter based on both conditions.
+        .filter(m -> m.wasInFinalStateBeforeError() || m.isInFinalState())
+        .sorted(Comparator.comparing(LexerMachine::getStepsBeforeError))
+        .toList()
+        .getLast();
+  }
 
-    private boolean anyMachineActive() {
-        return this.machines.stream().anyMatch(m -> !m.isInErrorState());
-    }
-
-    private LexerMachine getMachineWithMostSteps() {
-        return machines.stream()
-                        // When the last character of a file has been read, not all machines have to
-                        // be in error state. For that case  we need to filter based on both conditions.
-                       .filter(m -> m.wasInFinalStateBeforeError() || m.isInFinalState())
-                       .sorted(Comparator.comparing(LexerMachine::getStepsBeforeError))
-                       .toList()
-                       .getLast();
-    }
-
-    private void resetMachines() {
-        machines.forEach(StateMachine::reset);
-    }
+  private void resetMachines() {
+    machines.forEach(StateMachine::reset);
+  }
 }

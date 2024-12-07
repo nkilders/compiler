@@ -4,19 +4,19 @@ import de.nkilders.compiler.interpreter.Environment;
 import de.nkilders.compiler.interpreter.values.NumberValue;
 
 public class NumericExprNode extends ExprNode {
-    private double value;
+  private double value;
 
-    public NumericExprNode(double value) {
-        this.value = value;
-    }
+  public NumericExprNode(double value) {
+    this.value = value;
+  }
 
-    @Override
-    public NumberValue eval(Environment env) {
-        return new NumberValue(value);
-    }
+  @Override
+  public NumberValue eval(Environment env) {
+    return new NumberValue(value);
+  }
 
-    @Override
-    public String toString() {
-        return "NumericExprNode [value=" + value + "]";
-    }
+  @Override
+  public String toString() {
+    return "NumericExprNode [value=" + value + "]";
+  }
 }

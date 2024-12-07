@@ -16,113 +16,114 @@ import org.junit.jupiter.api.Test;
 import de.nkilders.compiler.util.StateMachine.State;
 
 class StateMachineTest {
-    StateMachine machine;
+  StateMachine machine;
 
-    @BeforeEach
-    void beforeEach() {
-        machine = new StateMachine() {
-            @Override
-            protected void initStatesAndTransitions() {
-              // States and transitions will be initialized in each test
-            }
-        };
-    }
+  @BeforeEach
+  void beforeEach() {
+    machine = new StateMachine() {
+      @Override
+      protected void initStatesAndTransitions() {
+        // States and transitions will be initialized in each test
+      }
+    };
+  }
 
-    @Test
-    void step_normalTransition() {
-        var init = machine.initialState();
-        var state = machine.state("state");
+  @Test
+  void step_normalTransition() {
+    var init = machine.initialState();
+    var state = machine.state("state");
 
-        init.addTransition(state, "a");
+    init.addTransition(state, "a");
 
-        machine.reset();
+    machine.reset();
 
-        assertEquals(init, machine.getCurrentState());
-        assertEquals(0, machine.getStepsBeforeError());
+    assertEquals(init, machine.getCurrentState());
+    assertEquals(0, machine.getStepsBeforeError());
 
-        machine.step('a');
+    machine.step('a');
 
-        assertEquals(state, machine.getCurrentState());
-        assertEquals(1, machine.getStepsBeforeError());
-    }
+    assertEquals(state, machine.getCurrentState());
+    assertEquals(1, machine.getStepsBeforeError());
+  }
 
-    @Test
-    void step_fallbackTransition() {
-        var init = machine.initialState();
-        var state = machine.state("state");
+  @Test
+  void step_fallbackTransition() {
+    var init = machine.initialState();
+    var state = machine.state("state");
 
-        init.setFallbackTransitionState(state);
+    init.setFallbackTransitionState(state);
 
-        machine.reset();
+    machine.reset();
 
-        assertEquals(init, machine.getCurrentState());
-        assertEquals(0, machine.getStepsBeforeError());
+    assertEquals(init, machine.getCurrentState());
+    assertEquals(0, machine.getStepsBeforeError());
 
-        machine.step('a');
+    machine.step('a');
 
-        assertEquals(state, machine.getCurrentState());
-        assertEquals(1, machine.getStepsBeforeError());
-    }
+    assertEquals(state, machine.getCurrentState());
+    assertEquals(1, machine.getStepsBeforeError());
+  }
 
-    @Test
-    void step_missingFallbackTransition() {
-        var init = machine.initialState();
+  @Test
+  void step_missingFallbackTransition() {
+    var init = machine.initialState();
 
-        machine.reset();
+    machine.reset();
 
-        assertEquals(init, machine.getCurrentState());
-        assertEquals(0, machine.getStepsBeforeError());
+    assertEquals(init, machine.getCurrentState());
+    assertEquals(0, machine.getStepsBeforeError());
 
-        machine.step('a');
+    machine.step('a');
 
-        assertEquals(init, machine.getCurrentState());
-        assertEquals(1, machine.getStepsBeforeError());
-    }
+    assertEquals(init, machine.getCurrentState());
+    assertEquals(1, machine.getStepsBeforeError());
+  }
 
-    @Test
-    void processText() {
-        StateMachine spyMachine = spy(machine);
-        doNothing().when(spyMachine).step(anyChar());
-        
-        spyMachine.processText("122");
+  @Test
+  void processText() {
+    StateMachine spyMachine = spy(machine);
+    doNothing().when(spyMachine)
+        .step(anyChar());
 
-        verify(spyMachine, times(1)).step('1');
-        verify(spyMachine, times(2)).step('2');
-    }
+    spyMachine.processText("122");
 
-    @Test
-    void initialState() {
-        assertNull(machine.getInitialState());
+    verify(spyMachine, times(1)).step('1');
+    verify(spyMachine, times(2)).step('2');
+  }
 
-        State state = machine.initialState();
+  @Test
+  void initialState() {
+    assertNull(machine.getInitialState());
 
-        assertNotNull(state);
-        assertEquals(state, machine.getInitialState());
-        assertEquals("init", state.getName());
-        assertFalse(state.isFinal());
-    }
+    State state = machine.initialState();
 
-    @Test
-    void errorState() {
-        assertNull(machine.getErrorState());
+    assertNotNull(state);
+    assertEquals(state, machine.getInitialState());
+    assertEquals("init", state.getName());
+    assertFalse(state.isFinal());
+  }
 
-        State state = machine.errorState();
+  @Test
+  void errorState() {
+    assertNull(machine.getErrorState());
 
-        assertNotNull(state);
-        assertEquals(state, machine.getErrorState());
-        assertEquals("error", state.getName());
-        assertFalse(state.isFinal());
-    }
+    State state = machine.errorState();
 
-    @Test
-    void state() {
-        final String stateName = "my state";
+    assertNotNull(state);
+    assertEquals(state, machine.getErrorState());
+    assertEquals("error", state.getName());
+    assertFalse(state.isFinal());
+  }
 
-        State state = machine.state(stateName);
+  @Test
+  void state() {
+    final String stateName = "my state";
 
-        assertNotNull(state);
-        assertEquals(stateName, state.getName());
-        assertFalse(state.isFinal());
-    }
+    State state = machine.state(stateName);
+
+    assertNotNull(state);
+    assertEquals(stateName, state.getName());
+    assertFalse(state.isFinal());
+  }
 
 }
