@@ -22,7 +22,9 @@ class StateMachineTest {
     void beforeEach() {
         machine = new StateMachine() {
             @Override
-            protected void initStatesAndTransitions() {}
+            protected void initStatesAndTransitions() {
+              // States and transitions will be initialized in each test
+            }
         };
     }
 

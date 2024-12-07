@@ -15,7 +15,7 @@ public abstract class StateMachine {
     private int stepsBeforeError;
     private boolean inFinalStateBeforeError;
 
-    public StateMachine(boolean initialize) {
+    protected StateMachine(boolean initialize) {
         this.initialState = null;
         this.currentState = null;
         this.errorState = null;
@@ -27,7 +27,7 @@ public abstract class StateMachine {
         }
     }
 
-    public StateMachine() {
+    protected StateMachine() {
         this(true);
     }
 
@@ -190,7 +190,7 @@ public abstract class StateMachine {
         currentState = newState;
     }
 
-    protected class State {
+    protected static class State {
         private String name;
         private boolean isFinal;
         private List<Transition> transitions;

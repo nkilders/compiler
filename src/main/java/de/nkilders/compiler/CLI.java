@@ -64,7 +64,7 @@ public class CLI {
         try {
             ast.run(environment);
         } catch(RuntimeException ex) {
-            ex.printStackTrace();
+            LOGGER.error(ex.getMessage(), ex);
         }
     }
 

@@ -10,7 +10,7 @@ import static de.nkilders.compiler.TokenType.WHILE;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ReservedKeyword {
+public final class ReservedKeyword {
     private static final Map<String, TokenType> KEYWORDS;
 
     static {
@@ -24,6 +24,8 @@ public class ReservedKeyword {
         keyword("while", WHILE);
     }
 
+    private ReservedKeyword() {}
+
     private static void keyword(String key, TokenType type) {
         KEYWORDS.put(key, type);
     }
@@ -31,9 +33,4 @@ public class ReservedKeyword {
     public static TokenType get(String text) {
         return KEYWORDS.get(text);
     }
-
-    /**
-     * Private constructor to hide the implicit public one
-     */
-    private ReservedKeyword() {}
 }

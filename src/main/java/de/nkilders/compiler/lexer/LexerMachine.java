@@ -5,11 +5,11 @@ import de.nkilders.compiler.util.StateMachine;
 
 public abstract class LexerMachine extends StateMachine {
 
-    public LexerMachine() {
+    protected LexerMachine() {
         super();
     }
 
-    public LexerMachine(boolean initialize) {
+    protected LexerMachine(boolean initialize) {
         super(initialize);
     }
 

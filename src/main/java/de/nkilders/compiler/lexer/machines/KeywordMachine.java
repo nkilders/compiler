@@ -46,7 +46,7 @@ public class KeywordMachine extends LexerMachine {
         states[states.length-1].setFallbackTransitionState(err);
     }
 
-    private String escapeRegEx(String input) {
+    private static String escapeRegEx(String input) {
         return input.replace("(", "\\(")
                     .replace(")", "\\)")
                     .replace("{", "\\{")

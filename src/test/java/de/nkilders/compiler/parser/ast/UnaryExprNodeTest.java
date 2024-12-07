@@ -6,6 +6,8 @@ import static de.nkilders.compiler.TokenType.MINUS;
 import static de.nkilders.compiler.TokenType.NOT;
 import static de.nkilders.compiler.TokenType.PLUS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -40,7 +42,8 @@ class UnaryExprNodeTest {
 
         RuntimeValue<?> result = node.eval(null);
 
-        assertEquals(false, result.getValue());
+        assertInstanceOf(Boolean.class, result.getValue());
+        assertFalse((boolean) result.getValue());
     }
     
     @Test
