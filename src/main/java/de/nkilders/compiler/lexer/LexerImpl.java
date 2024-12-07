@@ -144,7 +144,7 @@ public class LexerImpl implements Lexer {
     // @formatter:on
   }
 
-  private Token buildToken(TokenType type, String content, LineCol lineCol) {
+  private static Token buildToken(TokenType type, String content, LineCol lineCol) {
     if (type == TokenType.IDENTIFIER) {
       TokenType reservedKeywordType = ReservedKeyword.get(content);
 

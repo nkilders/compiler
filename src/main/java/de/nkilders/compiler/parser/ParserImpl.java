@@ -187,7 +187,7 @@ public class ParserImpl implements Parser {
     return left;
   }
 
-  private boolean isAddOperator(Token token) {
+  private static boolean isAddOperator(Token token) {
     return token.type() == PLUS || token.type() == MINUS;
   }
 
@@ -205,7 +205,7 @@ public class ParserImpl implements Parser {
     return left;
   }
 
-  private boolean isMulOperator(Token token) {
+  private static boolean isMulOperator(Token token) {
     return token.type() == MULTIPLY || token.type() == DIVIDE;
   }
 
@@ -218,7 +218,7 @@ public class ParserImpl implements Parser {
     return parsePrimaryExpr();
   }
 
-  private boolean isUnaryOperator(Token token) {
+  private static boolean isUnaryOperator(Token token) {
     return token.type() == PLUS || token.type() == MINUS || token.type() == NOT;
   }
 
@@ -238,12 +238,12 @@ public class ParserImpl implements Parser {
     };
   }
 
-  private NumericExprNode parseNumeric(Token token) {
+  private static NumericExprNode parseNumeric(Token token) {
     double value = Double.parseDouble(token.content());
     return new NumericExprNode(value);
   }
 
-  private StringExprNode parseString(Token token) {
+  private static StringExprNode parseString(Token token) {
     String value = token.content();
     value = value.substring(1, value.length() - 1);
     return new StringExprNode(value);
