@@ -32,7 +32,7 @@ public class KeywordMachine extends LexerMachine {
     String[] chars = keyword.split("");
     State[] states = new State[chars.length];
 
-    // Create states
+    // Create a state for each character in the keyword
     for (int i = 0; i < states.length; i++) {
       String stateName = String.format("#%d", i);
       boolean isLastState = i == (states.length - 1);
@@ -40,18 +40,24 @@ public class KeywordMachine extends LexerMachine {
       states[i] = state(stateName, isLastState);
     }
 
-    // Link first
-    init.addTransition(states[0], escapeRegEx(chars[0]))
+    // Link first state
+    var firstState = states[0];
+    init.addTransition(firstState, escapeRegEx(chars[0]))
         .setFallbackTransitionState(err);
 
     // Link middle states
     for (int i = 0; i < (states.length - 1); i++) {
-      states[i].addTransition(states[i + 1], escapeRegEx(chars[i + 1]))
+      var currentState = states[i];
+      var nextState = states[i + 1];
+      var escapedChar = escapeRegEx(chars[i + 1]);
+
+      currentState.addTransition(nextState, escapedChar)
           .setFallbackTransitionState(err);
     }
 
     // Link last state
-    states[states.length - 1].setFallbackTransitionState(err);
+    var lastState = states[states.length - 1];
+    lastState.setFallbackTransitionState(err);
   }
 
   private static String escapeRegEx(String input) {
