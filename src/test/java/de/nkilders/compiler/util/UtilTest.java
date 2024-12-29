@@ -5,37 +5,35 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
-import de.nkilders.compiler.util.Util.LineCol;
-
 class UtilTest {
 
   @Test
   void calculateLineAndCol() {
-    LineCol lineCol = Util.calculateLineAndCol("\nabc", 3);
+    CodeLocation location = CodeLocation.fromTextIndex("\nabc", 3);
 
-    assertEquals(2, lineCol.line());
-    assertEquals(3, lineCol.col());
+    assertEquals(2, location.line());
+    assertEquals(3, location.column());
   }
 
   @Test
   void calculateLineAndCol_posZero() {
-    LineCol lineCol = Util.calculateLineAndCol("", 0);
+    CodeLocation location = CodeLocation.fromTextIndex("", 0);
 
-    assertEquals(1, lineCol.line());
-    assertEquals(1, lineCol.col());
+    assertEquals(1, location.line());
+    assertEquals(1, location.column());
   }
 
   @Test
   void calculateLineAndCol_textNull() {
     assertThrows(NullPointerException.class, () -> {
-      Util.calculateLineAndCol(null, 0);
+      CodeLocation.fromTextIndex(null, 0);
     });
   }
 
   @Test
   void calculateLineAndCol_posNegative() {
     assertThrows(IndexOutOfBoundsException.class, () -> {
-      Util.calculateLineAndCol("", -1);
+      CodeLocation.fromTextIndex("", -1);
     });
   }
 }

@@ -1,6 +1,6 @@
 package de.nkilders.compiler;
 
-import de.nkilders.compiler.util.Util.LineCol;
+import de.nkilders.compiler.util.CodeLocation;
 
 public class CompilerException extends RuntimeException {
   private final int line;
@@ -13,8 +13,8 @@ public class CompilerException extends RuntimeException {
     this.col = col;
   }
 
-  public CompilerException(String message, LineCol lineCol) {
-    this(message, lineCol.line(), lineCol.col());
+  public CompilerException(String message, CodeLocation location) {
+    this(message, location.line(), location.column());
   }
 
   public int getLine() {

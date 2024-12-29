@@ -93,7 +93,7 @@ public class ParserImpl implements Parser {
 
     if (actualType != expectedType) {
       String message = String.format("Expected %s token but found %s", expectedType, actualType);
-      throw new CompilerException(message, current().pos());
+      throw new CompilerException(message, current().location());
     }
 
     return advance();
@@ -127,7 +127,7 @@ public class ParserImpl implements Parser {
   private StmtNode parseDeclareStmt() {
     if (current().type() != LET && current().type() != CONST) {
       String message = String.format("Unexpected token of type %s", current().type());
-      throw new CompilerException(message, current().pos());
+      throw new CompilerException(message, current().location());
     }
 
     boolean isConst = advance().type() == CONST;
@@ -141,7 +141,7 @@ public class ParserImpl implements Parser {
 
     if (isConst && expr == null) {
       String message = "Cannot declare a const variable without any value";
-      throw new CompilerException(message, varName.pos());
+      throw new CompilerException(message, varName.location());
     }
 
     return new DeclareStmtNode(varName.content(), isConst, expr);
@@ -160,7 +160,7 @@ public class ParserImpl implements Parser {
     if (current().type() == ASSIGN) {
       if (!(left instanceof VarExprNode assignee)) {
         String message = String.format("Unexpected token of type %s", current().type());
-        throw new CompilerException(message, current().pos());
+        throw new CompilerException(message, current().location());
       }
 
       advance();
@@ -233,7 +233,7 @@ public class ParserImpl implements Parser {
       case LPAREN -> parseParenExpr();
       default -> {
         String message = String.format("Unexpected token of type %s", t.type());
-        throw new CompilerException(message, t.pos());
+        throw new CompilerException(message, t.location());
       }
     };
   }

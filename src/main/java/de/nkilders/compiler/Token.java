@@ -1,6 +1,6 @@
 package de.nkilders.compiler;
 
-import de.nkilders.compiler.util.Util.LineCol;
+import de.nkilders.compiler.util.CodeLocation;
 
-public record Token(TokenType type, String content, LineCol pos) {
+public record Token(TokenType type, String content, CodeLocation location) {
 }

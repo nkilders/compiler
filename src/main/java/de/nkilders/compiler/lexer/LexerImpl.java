@@ -42,9 +42,8 @@ import de.nkilders.compiler.lexer.machines.MultiLineCommentMachine;
 import de.nkilders.compiler.lexer.machines.NumberMachine;
 import de.nkilders.compiler.lexer.machines.StringMachine;
 import de.nkilders.compiler.lexer.machines.WhitespaceMachine;
+import de.nkilders.compiler.util.CodeLocation;
 import de.nkilders.compiler.util.StateMachine;
-import de.nkilders.compiler.util.Util;
-import de.nkilders.compiler.util.Util.LineCol;
 
 public class LexerImpl implements Lexer {
   private static final Logger LOGGER = LoggerFactory.getLogger(LexerImpl.class);
@@ -81,11 +80,11 @@ public class LexerImpl implements Lexer {
         step++;
       } while ((pos + step) < input.length());
 
-      LineCol lineCol = Util.calculateLineAndCol(input, pos);
+      CodeLocation location = CodeLocation.fromTextIndex(input, pos);
 
       if (step == 0) {
         String msg = String.format("Unable to process character \"%s\"", input.charAt(pos));
-        throw new CompilerException(msg, lineCol);
+        throw new CompilerException(msg, location);
       }
 
       LexerMachine bestMachine = getMachineWithMostSteps();
@@ -95,13 +94,13 @@ public class LexerImpl implements Lexer {
       LOGGER.debug("Number of steps: {}", step);
       LOGGER.debug("Text: \"{}\"", text);
 
-      tokens.add(buildToken(bestMachine.getTokenType(), text, lineCol));
+      tokens.add(buildToken(bestMachine.getTokenType(), text, location));
 
       pos += step;
     }
 
-    LineCol lineCol = Util.calculateLineAndCol(input, pos);
-    tokens.add(buildToken(EOF, "", lineCol));
+    CodeLocation location = CodeLocation.fromTextIndex(input, pos);
+    tokens.add(buildToken(EOF, "", location));
 
     return tokens;
   }
@@ -144,7 +143,7 @@ public class LexerImpl implements Lexer {
     // @formatter:on
   }
 
-  private static Token buildToken(TokenType type, String content, LineCol lineCol) {
+  private static Token buildToken(TokenType type, String content, CodeLocation location) {
     if (type == TokenType.IDENTIFIER) {
       TokenType reservedKeywordType = ReservedKeyword.get(content);
 
@@ -153,7 +152,7 @@ public class LexerImpl implements Lexer {
       }
     }
 
-    return new Token(type, content, lineCol);
+    return new Token(type, content, location);
   }
 
   private boolean anyMachineActive() {
