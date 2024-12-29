@@ -7,7 +7,7 @@ public class Variable {
   private final boolean isConst;
   private RuntimeValue<?> value;
 
-  public Variable(String name, boolean isConst, @SuppressWarnings("rawtypes") RuntimeValue value) {
+  public Variable(String name, boolean isConst, RuntimeValue<?> value) {
     this.name = name;
     this.isConst = isConst;
     this.value = value;

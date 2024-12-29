@@ -25,8 +25,7 @@ public class Environment {
   /**
    * @throws VarException if the variable does already exist
    */
-  public void declareVariable(String name, boolean isConst, @SuppressWarnings("rawtypes") RuntimeValue value)
-      throws VarException {
+  public void declareVariable(String name, boolean isConst, RuntimeValue<?> value) throws VarException {
     if (variables.containsKey(name)) {
       String message = String.format("Cannot declare variable %s since it does already exist", name);
       throw new VarException(message);
@@ -46,7 +45,7 @@ public class Environment {
   /**
    * @throws VarException if the variable does not exist or is const
    */
-  public void assignVariable(String name, @SuppressWarnings("rawtypes") RuntimeValue value) throws VarException {
+  public void assignVariable(String name, RuntimeValue<?> value) throws VarException {
     if (variables.containsKey(name)) {
       variables.get(name)
           .setValue(value);
