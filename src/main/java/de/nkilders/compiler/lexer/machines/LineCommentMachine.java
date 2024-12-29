@@ -3,6 +3,12 @@ package de.nkilders.compiler.lexer.machines;
 import de.nkilders.compiler.TokenType;
 import de.nkilders.compiler.lexer.LexerMachine;
 
+/**
+ * A lexer machine that recognizes line comments.
+ * <p>
+ * A line comment starts with two slashes ({@code //}) and continues until the
+ * end of the line.
+ */
 public class LineCommentMachine extends LexerMachine {
 
   @Override

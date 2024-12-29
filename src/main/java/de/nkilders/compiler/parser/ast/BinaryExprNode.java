@@ -6,6 +6,26 @@ import de.nkilders.compiler.interpreter.values.NumberValue;
 import de.nkilders.compiler.interpreter.values.RuntimeValue;
 import de.nkilders.compiler.interpreter.values.StringValue;
 
+/**
+ * Represents a binary expression node in the AST.
+ * <p>
+ * A binary expression consists of a left and right expression and an operator.
+ * <p>
+ * The result of the binary expression depends on the types of the left and
+ * right expressions and the operator.
+ * <p>
+ * If both expressions evaluate to {@link NumberValue}, a numeric operation will
+ * be performed. The result will be a {@link NumberValue}. Allowed operators are
+ * {@link TokenType#PLUS}, {@link TokenType#MINUS}, {@link TokenType#MULTIPLY}
+ * and {@link TokenType#DIVIDE}.
+ * <p>
+ * If at least one expression evaluates to {@link StringValue} and the operator
+ * is {@link TokenType#PLUS}, both expressions will be converted to strings and
+ * concatenated. The result will be a {@link StringValue}.
+ * <p>
+ * If the expressions or operator are of different types, an
+ * {@link UnsupportedOperationException} will be thrown.
+ */
 public class BinaryExprNode extends ExprNode {
   private ExprNode left;
   private ExprNode right;

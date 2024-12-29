@@ -3,6 +3,15 @@ package de.nkilders.compiler.parser.ast;
 import de.nkilders.compiler.interpreter.Environment;
 import de.nkilders.compiler.interpreter.values.RuntimeValue;
 
+/**
+ * Represents an assignment expression node in the AST.
+ * <p>
+ * An assignment expression consists of a {@link VarExprNode} and an expression.
+ * <p>
+ * When evaluated, the expression is evaluated and the result is assigned to the
+ * variable. The value of the expression is also returned as the assignment
+ * expression's value.
+ */
 public class AssignExprNode extends ExprNode {
   private final VarExprNode assignee;
   private final ExprNode expr;

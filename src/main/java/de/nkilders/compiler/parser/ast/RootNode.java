@@ -5,6 +5,12 @@ import java.util.List;
 
 import de.nkilders.compiler.interpreter.Environment;
 
+/**
+ * Represents the root node of the AST.
+ * <p>
+ * The root node is the top-level node of the AST and contains all the
+ * statements of the program. It is the entry point for the interpreter.
+ */
 public class RootNode extends AstNode {
   private final List<StmtNode> statements;
 

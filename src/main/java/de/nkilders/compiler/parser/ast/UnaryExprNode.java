@@ -10,6 +10,25 @@ import de.nkilders.compiler.interpreter.values.BooleanValue;
 import de.nkilders.compiler.interpreter.values.NumberValue;
 import de.nkilders.compiler.interpreter.values.RuntimeValue;
 
+/**
+ * Represents a unary expression node in the AST
+ * <p>
+ * A unary expression consists of an operator and an expression.
+ * <p>
+ * The result of the unary expression depends on the type of the expression and
+ * the operator.
+ * <p>
+ * If the expression evaluates to {@link BooleanValue} and the operator is
+ * {@link TokenType#NOT}, the boolean value will be negated. The result will be
+ * a {@link BooleanValue}.
+ * <p>
+ * If the expression evaluates to {@link NumberValue} and the operator is
+ * {@link TokenType#PLUS} or {@link TokenType#MINUS}, the number will be
+ * multiplied by 1 or -1 respectively. The result will be a {@link NumberValue}.
+ * <p>
+ * If the expression or operator is of a different type, an
+ * {@link UnsupportedOperationException} will be thrown.
+ */
 public class UnaryExprNode extends ExprNode {
   private TokenType operator;
   private ExprNode expression;

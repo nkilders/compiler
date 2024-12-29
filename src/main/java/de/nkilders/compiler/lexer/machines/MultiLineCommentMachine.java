@@ -3,6 +3,13 @@ package de.nkilders.compiler.lexer.machines;
 import de.nkilders.compiler.TokenType;
 import de.nkilders.compiler.lexer.LexerMachine;
 
+/**
+ * A lexer machine that recognizes multi-line comments.
+ * <p>
+ * A multi-line comment starts with a slash followed by an asterisk ({@code /*})
+ * and ends with an asterisk followed by a slash ({@code * /}). Multi-line
+ * comments can span multiple lines and can contain any characters.
+ */
 public class MultiLineCommentMachine extends LexerMachine {
 
   @Override

@@ -3,6 +3,12 @@ package de.nkilders.compiler.lexer.machines;
 import de.nkilders.compiler.TokenType;
 import de.nkilders.compiler.lexer.LexerMachine;
 
+/**
+ * A lexer machine that recognizes whitespace.
+ * <p>
+ * Whitespace is a sequence of one or more space, tab, or newline characters.
+ * Whitespace is used to separate tokens and is ignored by the compiler.
+ */
 public class WhitespaceMachine extends LexerMachine {
 
   @Override

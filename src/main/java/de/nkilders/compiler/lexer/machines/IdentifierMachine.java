@@ -3,6 +3,13 @@ package de.nkilders.compiler.lexer.machines;
 import de.nkilders.compiler.TokenType;
 import de.nkilders.compiler.lexer.LexerMachine;
 
+/**
+ * A lexer machine that recognizes identifiers.
+ * <p>
+ * An identifier is a sequence of letters, digits, and underscores that does not
+ * start with a digit. Identifiers are used to name variables, functions, and
+ * other entities in the source code.
+ */
 public class IdentifierMachine extends LexerMachine {
 
   @Override
