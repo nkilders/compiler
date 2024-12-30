@@ -11,16 +11,16 @@ class CodeLocationTest {
   void fromTextIndex() {
     CodeLocation location = CodeLocation.fromTextIndex("\nabc", 3);
 
-    assertEquals(2, location.line());
-    assertEquals(3, location.column());
+    assertEquals(2, location.line(), "Wrong line");
+    assertEquals(3, location.column(), "Wrong column");
   }
 
   @Test
   void fromTextIndex_posZero() {
     CodeLocation location = CodeLocation.fromTextIndex("", 0);
 
-    assertEquals(1, location.line());
-    assertEquals(1, location.column());
+    assertEquals(1, location.line(), "Wrong line");
+    assertEquals(1, location.column(), "Wrong column");
   }
 
   @Test
