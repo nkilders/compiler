@@ -14,12 +14,14 @@ public class Environment {
   public Environment(Environment parent) {
     this.parent = parent;
     this.variables = new HashMap<>();
+
+    if (parent == null) {
+      this.declareGlobalVariables();
+    }
   }
 
   public Environment() {
     this(null);
-
-    this.declareGlobalVariables();
   }
 
   /**
