@@ -1,5 +1,7 @@
 package de.nkilders.compiler.interpreter;
 
+import static java.util.Objects.requireNonNull;
+
 import de.nkilders.compiler.interpreter.values.RuntimeValue;
 
 public class Variable {
@@ -7,12 +9,26 @@ public class Variable {
   private final boolean isConst;
   private RuntimeValue<?> value;
 
+  /**
+   * Creates a new variable with the given name, const flag and value.
+   * 
+   * @param name    the name of the variable (must not be null)
+   * @param isConst whether the variable is const
+   * @param value   the value of the variable (can be null)
+   */
   public Variable(String name, boolean isConst, RuntimeValue<?> value) {
-    this.name = name;
+    this.name = requireNonNull(name);
     this.isConst = isConst;
     this.value = value;
   }
 
+  /**
+   * Creates a new variable with the given name and const flag. The value of the
+   * variable is null.
+   * 
+   * @param name    the name of the variable (must not be null)
+   * @param isConst whether the variable is const
+   */
   public Variable(String name, boolean isConst) {
     this(name, isConst, null);
   }

@@ -1,5 +1,7 @@
 package de.nkilders.compiler.lexer.machines;
 
+import static java.util.Objects.requireNonNull;
+
 import de.nkilders.compiler.TokenType;
 import de.nkilders.compiler.lexer.LexerMachine;
 
@@ -15,10 +17,14 @@ public class KeywordMachine extends LexerMachine {
   private final String keyword;
   private final TokenType tokenType;
 
+  /**
+   * @param keyword   the keyword to recognize (must not be null)
+   * @param tokenType the token type to return when the keyword is recognized
+   */
   public KeywordMachine(String keyword, TokenType tokenType) {
     super(false);
 
-    this.keyword = keyword;
+    this.keyword = requireNonNull(keyword);
     this.tokenType = tokenType;
 
     super.init();

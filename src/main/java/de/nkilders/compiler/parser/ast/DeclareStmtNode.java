@@ -1,5 +1,7 @@
 package de.nkilders.compiler.parser.ast;
 
+import static java.util.Objects.requireNonNull;
+
 import de.nkilders.compiler.interpreter.Environment;
 import de.nkilders.compiler.interpreter.values.RuntimeValue;
 
@@ -18,12 +20,21 @@ public class DeclareStmtNode extends StmtNode {
   private final boolean isConst;
   private final ExprNode expr;
 
+  /**
+   * @param varName the name of the variable (must not be null)
+   * @param isConst whether the variable is constant
+   * @param expr    the expression to evaluate and assign (can be null)
+   */
   public DeclareStmtNode(String varName, boolean isConst, ExprNode expr) {
-    this.varName = varName;
+    this.varName = requireNonNull(varName);
     this.isConst = isConst;
     this.expr = expr;
   }
 
+  /**
+   * @param varName the name of the variable (must not be null)
+   * @param isConst whether the variable is constant
+   */
   public DeclareStmtNode(String varName, boolean isConst) {
     this(varName, isConst, null);
   }

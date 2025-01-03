@@ -1,5 +1,7 @@
 package de.nkilders.compiler.parser.ast;
 
+import static java.util.Objects.requireNonNull;
+
 import de.nkilders.compiler.TokenType;
 import de.nkilders.compiler.interpreter.Environment;
 import de.nkilders.compiler.interpreter.values.NumberValue;
@@ -31,10 +33,15 @@ public class BinaryExprNode extends ExprNode {
   private ExprNode right;
   private TokenType operator;
 
+  /**
+   * @param left     the left expression (must not be null)
+   * @param right    the right expression (must not be null)
+   * @param operator the operator (must not be null)
+   */
   public BinaryExprNode(ExprNode left, ExprNode right, TokenType operator) {
-    this.left = left;
-    this.right = right;
-    this.operator = operator;
+    this.left = requireNonNull(left);
+    this.right = requireNonNull(right);
+    this.operator = requireNonNull(operator);
   }
 
   @Override

@@ -3,6 +3,7 @@ package de.nkilders.compiler.parser.ast;
 import static de.nkilders.compiler.TokenType.MINUS;
 import static de.nkilders.compiler.TokenType.NOT;
 import static de.nkilders.compiler.TokenType.PLUS;
+import static java.util.Objects.requireNonNull;
 
 import de.nkilders.compiler.TokenType;
 import de.nkilders.compiler.interpreter.Environment;
@@ -33,9 +34,13 @@ public class UnaryExprNode extends ExprNode {
   private TokenType operator;
   private ExprNode expression;
 
+  /**
+   * @param operator   the operator
+   * @param expression the expression (must not be null)
+   */
   public UnaryExprNode(TokenType operator, ExprNode expression) {
     this.operator = operator;
-    this.expression = expression;
+    this.expression = requireNonNull(expression);
   }
 
   @Override

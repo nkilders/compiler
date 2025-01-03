@@ -1,5 +1,7 @@
 package de.nkilders.compiler.parser.ast;
 
+import static java.util.Objects.requireNonNull;
+
 import de.nkilders.compiler.interpreter.Environment;
 import de.nkilders.compiler.interpreter.values.RuntimeValue;
 
@@ -16,9 +18,13 @@ public class AssignExprNode extends ExprNode {
   private final VarExprNode assignee;
   private final ExprNode expr;
 
+  /**
+   * @param assignee the variable to assign to (must not be null)
+   * @param expr     the expression to evaluate and assign (must not be null)
+   */
   public AssignExprNode(VarExprNode assignee, ExprNode expr) {
-    this.assignee = assignee;
-    this.expr = expr;
+    this.assignee = requireNonNull(assignee);
+    this.expr = requireNonNull(expr);
   }
 
   @Override
